@@ -1,0 +1,265 @@
+/* Main CSS for Musique Application */
+
+/* Global styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Header and navigation */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+/* Card styling */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+/* Equipment catalog */
+.equipment-card {
+    height: 100%;
+}
+
+.equipment-card .card-img-top {
+    height: 180px;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+/* Buttons and controls */
+.btn {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary:hover {
+    background-color: #3a56d4;
+    border-color: #3a56d4;
+}
+
+.btn-outline-primary {
+    color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-success {
+    background-color: #38b000;
+    border-color: #38b000;
+}
+
+.btn-success:hover {
+    background-color: #2d9900;
+    border-color: #2d9900;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border-radius: 4px;
+    border-color: #ced4da;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+    padding: 5rem 0;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 4px;
+    border: none;
+}
+
+/* Badge styling */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Price display */
+.price {
+    font-weight: 700;
+    color: #4361ee;
+}
+
+/* Order statuses */
+.status-pending {
+    background-color: #ffc107;
+}
+
+.status-confirmed {
+    background-color: #0dcaf0;
+}
+
+.status-completed {
+    background-color: #198754;
+}
+
+.status-cancelled {
+    background-color: #dc3545;
+}
+
+/* Responsive font sizes */
+@media (max-width: 767.98px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Fix for Bootstrap and Feather Icons compatibility */
+.feather {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
+/* Custom animated components */
+.zoom-on-hover {
+    transition: transform 0.3s ease;
+}
+
+.zoom-on-hover:hover {
+    transform: scale(1.05);
+}
+
+/* Admin dashboard cards */
+.admin-stat-card {
+    border-radius: 8px;
+    border-left: 5px solid #4361ee;
+}
+
+/* Login and registration forms */
+.auth-form {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* Footer */
+.footer {
+    background-color: #f8f9fa;
+    padding: 3rem 0 1.5rem;
+}
+
+.footer h5 {
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+}
+
+.footer a {
+    color: #4361ee;
+}
+
+.footer hr {
+    margin: 2rem 0 1.5rem;
+}
+
+/* Styles pour l'impression */
+@media print {
+    /* Cacher éléments non nécessaires pour l'impression */
+    .navbar, 
+    .footer, 
+    .btn:not(.print-only),
+    .d-print-none {
+        display: none !important;
+    }
+    
+    /* Afficher la section d'impression */
+    .d-print-block {
+        display: block !important;
+    }
+    
+    /* Style de base pour le document imprimé */
+    body {
+        font-size: 12pt;
+        color: #000;
+        background-color: #fff;
+    }
+    
+    /* Mise en page pour la facture */
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Amélioration du rendu des tableaux */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    th, td {
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+    
+    /* Sauts de page */
+    .page-break {
+        page-break-before: always;
+    }
+    
+    /* Style pour le logo et en-tête */
+    .print-header {
+        margin-bottom: 20px;
+    }
+    
+    /* Assurer que les info importantes sont visibles */
+    .alert {
+        border: 1px solid #000;
+        background-color: #fff !important;
+        color: #000 !important;
+    }
+}

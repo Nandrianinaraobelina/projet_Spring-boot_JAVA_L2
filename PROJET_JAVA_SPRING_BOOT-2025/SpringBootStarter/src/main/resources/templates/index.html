@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musique - Musical Equipment Store</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <!-- Hero Section -->
+    <div class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold">Welcome to Musique</h1>
+                    <p class="lead">Your one-stop shop for high-quality musical equipment. Buy or rent the perfect instrument for your needs.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="/equipment" class="btn btn-primary btn-lg">Browse Catalog</a>
+                        <a href="/equipment?rental=true" class="btn btn-outline-light btn-lg">Rent Equipment</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <svg class="img-fluid" width="500" height="300" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Simple SVG musical instruments illustration -->
+                        <g fill="none" stroke="white" stroke-width="3">
+                            <!-- Guitar -->
+                            <path d="M100,200 Q150,230 200,200 Q220,190 220,170 L220,50 L180,50 L180,170 Q180,180 160,185 Q120,200 80,180 Q60,170 60,150 Q60,130 80,120 Q100,110 120,120 Q140,130 140,150 Q130,170 100,170 Q80,165 80,150" />
+                            
+                            <!-- Drum -->
+                            <ellipse cx="300" cy="220" rx="50" ry="20" />
+                            <line x1="260" y1="220" x2="260" y2="150" />
+                            <line x1="340" y1="220" x2="340" y2="150" />
+                            <ellipse cx="300" cy="150" rx="50" ry="20" />
+                            
+                            <!-- Music notes -->
+                            <path d="M400,80 Q410,60 420,80 L440,80 Q450,60 460,80 L400,80" />
+                            <line x1="410" y1="80" x2="410" y2="130" />
+                            <line x1="450" y1="80" x2="450" y2="120" />
+                            <ellipse cx="405" cy="130" rx="10" ry="8" />
+                            <ellipse cx="445" cy="120" rx="10" ry="8" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Categories -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Equipment Categories</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i data-feather="disc" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
+                        <h5 class="card-title">Guitars</h5>
+                        <p class="card-text">Electric, acoustic, and bass guitars from top brands.</p>
+                        <a href="/equipment?category=guitar" class="btn btn-outline-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i data-feather="speaker" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
+                        <h5 class="card-title">Amplifiers</h5>
+                        <p class="card-text">From practice amps to full stacks for stage performance.</p>
+                        <a href="/equipment?category=amplifier" class="btn btn-outline-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i data-feather="radio" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
+                        <h5 class="card-title">Keyboards</h5>
+                        <p class="card-text">Digital pianos, synthesizers, and MIDI controllers.</p>
+                        <a href="/equipment?category=keyboard" class="btn btn-outline-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i data-feather="mic" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
+                        <h5 class="card-title">Microphones</h5>
+                        <p class="card-text">Professional microphones for studio and live performance.</p>
+                        <a href="/equipment?category=microphone" class="btn btn-outline-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How It Works -->
+    <div class="container my-5">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i data-feather="search" style="width: 48px; height: 48px;"></i>
+                </div>
+                <h4>Browse</h4>
+                <p>Explore our wide range of musical equipment available for sale or rental.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i data-feather="shopping-cart" style="width: 48px; height: 48px;"></i>
+                </div>
+                <h4>Purchase or Rent</h4>
+                <p>Choose between buying equipment outright or renting for a specific period.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i data-feather="music" style="width: 48px; height: 48px;"></i>
+                </div>
+                <h4>Play</h4>
+                <p>Receive your equipment and start making beautiful music!</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonials -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">What Our Customers Say</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="card border-0 bg-transparent">
+                                    <div class="card-body text-center">
+                                        <p class="lead">"I've been renting equipment for my band's gigs for over a year now. The quality is excellent and the rental process is seamless. Highly recommended!"</p>
+                                        <div class="d-flex justify-content-center">
+                                            <div>
+                                                <h5 class="mb-0">David Johnson</h5>
+                                                <small class="text-muted">Professional Guitarist</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="card border-0 bg-transparent">
+                                    <div class="card-body text-center">
+                                        <p class="lead">"Great selection of instruments at competitive prices. The staff is knowledgeable and helpful. My go-to store for all my music needs!"</p>
+                                        <div class="d-flex justify-content-center">
+                                            <div>
+                                                <h5 class="mb-0">Sarah Williams</h5>
+                                                <small class="text-muted">Music Teacher</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments/footer :: footer"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html>

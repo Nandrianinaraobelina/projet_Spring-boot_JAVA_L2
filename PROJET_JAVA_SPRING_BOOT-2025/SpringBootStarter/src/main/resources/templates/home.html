@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Musique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-75">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold mb-4">Location d'équipements de musique</h1>
+                    <p class="lead mb-4">Trouvez l'équipement parfait pour votre prochain événement ou session d'enregistrement.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <a th:href="@{/equipment}" class="btn btn-primary btn-lg px-4 me-md-2">
+                            <i data-feather="search"></i> Parcourir les équipements
+                        </a>
+                        <a th:href="@{/contact}" class="btn btn-outline-secondary btn-lg px-4">
+                            <i data-feather="mail"></i> Nous contacter
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Equipment Section -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Équipements populaires</h2>
+        <div class="row">
+            <div th:each="equipment : ${featuredEquipment}" class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img th:if="${equipment.image != null}" th:src="${equipment.image}" class="card-img-top" alt="Image de l'équipement">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${equipment.name}">Nom de l'équipement</h5>
+                        <p class="card-text" th:text="${equipment.description}">Description de l'équipement</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0" th:text="${#numbers.formatDecimal(equipment.price, 1, 'POINT', 2, 'COMMA') + ' €'}">0.00 €</span>
+                            <a th:href="@{/equipment/{id}(id=${equipment.id})}" class="btn btn-primary">
+                                <i data-feather="eye"></i> Voir les détails
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Categories Section -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Catégories</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i data-feather="music" class="mb-3" style="width: 48px; height: 48px;"></i>
+                        <h5 class="card-title">Instruments</h5>
+                        <p class="card-text">Guitares, pianos, batteries et plus encore.</p>
+                        <a th:href="@{/equipment?category=instruments}" class="btn btn-outline-primary">Voir les instruments</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i data-feather="mic" class="mb-3" style="width: 48px; height: 48px;"></i>
+                        <h5 class="card-title">Équipement audio</h5>
+                        <p class="card-text">Microphones, enceintes, tables de mixage et plus encore.</p>
+                        <a th:href="@{/equipment?category=audio}" class="btn btn-outline-primary">Voir l'équipement audio</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i data-feather="video" class="mb-3" style="width: 48px; height: 48px;"></i>
+                        <h5 class="card-title">Équipement vidéo</h5>
+                        <p class="card-text">Caméras, éclairage, trépieds et plus encore.</p>
+                        <a th:href="@{/equipment?category=video}" class="btn btn-outline-primary">Voir l'équipement vidéo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action Section -->
+    <div class="container mt-5">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center py-5">
+                <h2 class="card-title">Prêt à commencer ?</h2>
+                <p class="card-text">Inscrivez-vous maintenant et commencez à louer des équipements.</p>
+                <a th:href="@{/register}" class="btn btn-light btn-lg">
+                    <i data-feather="user-plus"></i> S'inscrire
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments/footer :: footer"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html> 

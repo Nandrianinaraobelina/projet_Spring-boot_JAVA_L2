@@ -1,0 +1,43 @@
+modules = ["java", "java-17", "postgresql-16"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["maven"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Spring Boot App"
+
+[[workflows.workflow]]
+name = "Spring Boot App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd . && mvn spring-boot:run"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "cd src && mvn spring-boot:run -Dserver.port=5000"]
+
+[[ports]]
+localPort = 5000
+externalPort = 5000
+
+[[ports]]
+localPort = 35729
+externalPort = 80

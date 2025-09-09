@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Commandes - Musique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <div class="container mt-4">
+        <h1 class="mb-4">Mes Commandes</h1>
+        
+        <div th:if="${orders.empty}" class="alert alert-info">
+            <p>Vous n'avez pas encore de commandes. <a th:href="@{/equipment}" class="alert-link">Parcourez nos équipements</a> pour passer votre première commande.</p>
+        </div>
+        
+        <div th:unless="${orders.empty}" class="accordion" id="ordersAccordion">
+            <div class="card mb-3" th:each="order, status : ${orders}">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light" 
+                     th:id="'heading-' + ${order.id}">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-link text-decoration-none collapsed" type="button" 
+                                data-bs-toggle="collapse" th:data-bs-target="'#collapse-' + ${order.id}"
+                                aria-expanded="false" th:aria-controls="'collapse-' + ${order.id}">
+                            <i data-feather="chevron-down" class="me-1"></i>
+                            Commande #<span th:text="${order.id}">123</span>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span th:class="${'badge me-3 ' + 
+                            (order.status == 'PENDING' ? 'bg-warning' : 
+                            (order.status == 'CONFIRMED' ? 'bg-info' : 
+                            (order.status == 'COMPLETED' ? 'bg-success' : 'bg-danger')))}"
+                              th:text="${order.status}">
+                            EN ATTENTE
+                        </span>
+                        <span class="text-muted" th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy')}">01-01-2023</span>
+                    </div>
+                </div>
+                
+                <div th:id="'collapse-' + ${order.id}" class="collapse" th:aria-labelledby="'heading-' + ${order.id}" 
+                     data-bs-parent="#ordersAccordion">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h5>Détails de la Commande</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>Type de Commande:</strong> <span th:text="${order.orderType}">VENTE</span></li>
+                                    <li><strong>Date de Commande:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">01-01-2023 12:30</span></li>
+                                    <li><strong>Montant Total:</strong> <span th:text="${'€' + order.totalAmount}">€100.00</span></li>
+                                    <li th:if="${order.isRental()}">
+                                        <strong>Période de Location:</strong> 
+                                        <span th:text="${#temporals.format(order.rentalStartDate, 'dd-MM-yyyy')}">01-01-2023</span> 
+                                        au 
+                                        <span th:text="${#temporals.format(order.rentalEndDate, 'dd-MM-yyyy')}">05-01-2023</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <a th:href="@{'/orders/' + ${order.id} + '/confirmation'}" class="btn btn-outline-primary me-2">
+                                    <i data-feather="file-text"></i> Voir détails
+                                </a>
+                                <button th:data-order-id="${order.id}" onclick="printOrder(this.getAttribute('data-order-id'))" class="btn btn-outline-dark me-2">
+                                    <i data-feather="printer"></i> Imprimer
+                                </button>
+                                <form th:if="${order.orderType == 'RENTAL' && order.status != 'CANCELLED'}" 
+                                      th:action="@{/orders/{id}/cancel(id=${order.id})}" 
+                                      method="post" 
+                                      style="display: inline;">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit" class="btn btn-outline-danger" 
+                                            onclick="return confirm('Êtes-vous sûr de vouloir annuler cette location ?')">
+                                        <i data-feather="x"></i> Annuler
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <h6>Articles de la Commande</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Article</th>
+                                        <th>Quantité</th>
+                                        <th>Prix</th>
+                                        <th>Sous-total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${order.orderItems}">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img th:if="${item.equipment.imageUrl}" th:src="${item.equipment.imageUrl}" 
+                                                     alt="Équipement" class="me-2" style="max-width: 40px; max-height: 40px;">
+                                                <span th:text="${item.equipment.name}">Nom de l'équipement</span>
+                                            </div>
+                                        </td>
+                                        <td th:text="${item.quantity}">1</td>
+                                        <td th:text="${'€' + item.price}">€100.00</td>
+                                        <td th:text="${'€' + item.subtotal}">€100.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments/footer :: footer"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+        
+        // Fonction pour imprimer une facture
+        function printOrder(orderId) {
+            console.log(`Impression de la commande #${orderId} en cours...`);
+            
+            // Ouvrir une nouvelle fenêtre pour l'impression avec le paramètre print explicitement défini à true
+            const printWindow = window.open(`/orders/${orderId}/confirmation?print=true`, '_blank');
+            
+            // Une fois la fenêtre chargée, lancer l'impression
+            if (printWindow) {
+                printWindow.onload = function() {
+                    setTimeout(function() {
+                        try {
+                            printWindow.print();
+                            console.log("Impression lancée avec succès");
+                        } catch (e) {
+                            console.error("Erreur lors de l'impression:", e);
+                            alert("Une erreur est survenue lors de l'impression. Veuillez réessayer.");
+                        }
+                    }, 1000); // Délai augmenté pour assurer le chargement complet
+                };
+            } else {
+                // En cas de blocage de popup
+                alert("Veuillez autoriser les fenêtres pop-up pour imprimer les factures.");
+            }
+        }
+    </script>
+</body>
+</html>

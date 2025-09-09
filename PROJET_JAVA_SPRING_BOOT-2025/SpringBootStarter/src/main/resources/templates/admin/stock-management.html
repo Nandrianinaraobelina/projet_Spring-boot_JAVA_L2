@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Stock - Musique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <div class="container mt-4">
+        <h1 class="mb-4">Gestion du Stock</h1>
+        
+        <div th:if="${param.stockUpdated}" class="alert alert-success">
+            Le stock a été mis à jour avec succès.
+        </div>
+        
+        <div th:if="${param.error}" class="alert alert-danger">
+            <span th:if="${param.error == 'equipmentNotFound'}">Équipement non trouvé.</span>
+            <span th:if="${param.error == 'true'}">Une erreur est survenue lors de la mise à jour du stock.</span>
+        </div>
+        
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}">
+            Erreur lors du chargement de la gestion du stock.
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Équipement</th>
+                        <th>Stock Actuel</th>
+                        <th>Disponibilité</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${equipment}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" 
+                                     alt="Équipement" class="me-2" style="max-width: 40px; max-height: 40px;">
+                                <span th:text="${item.name}">Nom de l'équipement</span>
+                            </div>
+                        </td>
+                        <td th:text="${item.quantityAvailable}">0</td>
+                        <td>
+                            <span th:class="${item.available ? 'badge bg-success' : 'badge bg-danger'}"
+                                  th:text="${item.available ? 'Disponible' : 'Rupture de stock'}">
+                                Disponible
+                            </span>
+                        </td>
+                        <td>
+                            <form th:action="@{'/equipment/' + ${item.id} + '/increase-stock'}" method="get" class="d-inline">
+                                <div class="input-group" style="width: 200px;">
+                                    <input type="number" name="quantity" class="form-control" min="1" value="10">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i data-feather="plus"></i> Augmenter
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div th:replace="fragments/footer :: footer"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html> 

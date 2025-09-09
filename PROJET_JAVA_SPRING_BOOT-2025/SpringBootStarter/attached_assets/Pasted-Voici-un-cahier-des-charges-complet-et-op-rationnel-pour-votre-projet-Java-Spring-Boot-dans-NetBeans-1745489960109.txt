@@ -1,0 +1,213 @@
+Voici un cahier des charges complet et opérationnel pour votre projet Java Spring Boot dans NetBeans, avec base de données H2, règles de gestion, structure, interface web fonctionnelle, et insertion de nombreux produits.
+
+---
+
+## 1. Objectif du projet
+
+Développer une application web pour :
+
+- Vendre du matériel de musique.
+- Louer du matériel de musique avec gestion des dates de réservation.
+
+Technologie : Java + Spring Boot, base H2 en mémoire avec console web.
+
+---
+
+## 2. Structure du projet
+
+```
+src/main/java/com/musique/
+├── config          (configurations Spring Boot, sécurité)
+├── controller      (gestion des endpoints REST / MVC)
+├── model           (entités JPA)
+├── repository      (interfaces JPA)
+├── service         (logique métier)
+└── MusiqueApplication.java (classe principale)
+
+src/main/resources/
+├── application.properties (config Spring Boot)
+├── schema.sql            (création tables)
+├── data.sql              (données initiales)
+└── templates/            (pages Thymeleaf)
+    ├── equipment.html
+    ├── reservation.html
+    ├── login.html
+    └── ...
+```
+
+---
+
+## 3. Base de données SQL (schema.sql)
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS equipment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price_sale DECIMAL(10,2) NOT NULL,
+    price_rental DECIMAL(10,2) NOT NULL,
+    quantity_available INT NOT NULL,
+    image_url VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    order_type VARCHAR(20) NOT NULL, -- SALE ou RENTAL
+    rental_start_date DATE,
+    rental_end_date DATE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    equipment_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (equipment_id) REFERENCES equipment(id)
+);
+```
+
+---
+
+## 4. Règles de gestion
+
+- **Utilisateurs** : inscription, connexion, rôles (ADMIN, USER).
+- **Stock** : vérifier la quantité disponible avant vente/location.
+- **Location** : réservation avec dates début/fin, pas de chevauchement.
+- **Commande** : statut PENDING → CONFIRMED → COMPLETED/CANCELLED.
+- **Admin** : gestion des matériels, commandes, utilisateurs.
+
+---
+
+## 5. Configuration Spring Boot (application.properties)
+
+```properties
+spring.datasource.url=jdbc:h2:mem:musiquedb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+```
+
+---
+
+## 6. Insertion de nombreux produits (data.sql)
+
+```sql
+-- Utilisateurs
+INSERT INTO users (name, email, password, role) VALUES
+('Admin', 'admin@music.com', '$2a$10$hashedpasswordadmin', 'ADMIN'),
+('User Test', 'user@music.com', '$2a$10$hashedpassworduser', 'USER');
+
+-- Produits musique
+INSERT INTO equipment (name, description, price_sale, price_rental, quantity_available, image_url) VALUES
+('Fender Stratocaster', 'Guitare électrique classique', 899.99, 49.99, 10, '/images/stratocaster.jpg'),
+('Gibson Les Paul', 'Guitare électrique haut de gamme', 2499.99, 129.99, 5, '/images/lespaul.jpg'),
+('Yamaha Drum Kit', 'Batterie acoustique professionnelle', 1200.00, 79.99, 7, '/images/drumkit.jpg'),
+('Marshall Amplifier', 'Amplificateur guitare 100W', 1500.00, 89.99, 4, '/images/marshall.jpg'),
+('Nord Stage 3 Keyboard', 'Clavier de scène polyvalent', 3999.99, 199.99, 3, '/images/nordstage3.jpg'),
+('Pioneer DJ Controller', 'Contrôleur DJ professionnel', 2299.99, 129.99, 6, '/images/pioneer.jpg'),
+('JBL EON615 Speaker', 'Enceinte amplifiée portable', 549.99, 49.99, 8, '/images/jbl.jpg'),
+('Fender Precision Bass', 'Basse électrique classique', 1099.99, 59.99, 9, '/images/precisionbass.jpg'),
+('Akai MPC Live', 'Station de production musicale', 1199.99, 89.99, 5, '/images/akai.jpg'),
+('Shure SM58 Microphone', 'Microphone dynamique vocal', 99.99, 9.99, 20, '/images/shure.jpg');
+```
+
+---
+
+## 7. Interface Web (extraits Thymeleaf)
+
+### Catalogue (equipment.html)
+
+```html
+
+
+
+  Catalogue Matériel Musique
+  
+
+
+
+  Catalogue
+  
+    
+      
+        
+        
+          
+          
+          Prix vente : 
+          Prix location/jour : 
+          Réserver
+        
+      
+    
+  
+
+
+
+```
+
+### Formulaire réservation (reservation.html)
+
+```html
+
+  
+  
+    Date début
+    
+  
+  
+    Date fin
+    
+  
+  Confirmer la réservation
+
+```
+
+---
+
+## 8. Lancement et accès
+
+- **Lancer l’application** depuis NetBeans via la classe principale annotée `@SpringBootApplication`.
+- **Accéder au site** : http://localhost:8080
+- **Accéder à la console H2** : http://localhost:8080/h2-console  
+  - JDBC URL : `jdbc:h2:mem:musiquedb`  
+  - User : `sa`  
+  - Password : (vide)
+
+---
+
+Ce cahier des charges vous offre une base complète, fonctionnelle et prête à l’emploi pour votre application de vente et location de matériel de musique avec Spring Boot, NetBeans et base H2. Vous pouvez enrichir les fonctionnalités et l’interface selon vos besoins.
+
+Citations:
+[1] https://github.com/Monal4/Online-Music-Store-using-Spring-Boot
+[2] https://musicshop360.com/blog/musical-instrument-rentals
+[3] https://reservety.com/music-instrument-rental-software/
+[4] https://www.ignek.com/case-study/ecommerce-platform-for-sales-rentals/
+[5] https://musicshop360.com/blog/musical-instrument-rental-software
+[6] https://www.verifiedmarketresearch.com/product/musical-instrument-rental-service-market/
+[7] https://www.flagstaffarizona.org/things-to-do/outdoors-nature/winter-adventure/rentals/
+[8] https://www.freeprojectz.com/python-django-mysql-project-download/online-music-instrument-store
+
+---
+Réponse de Perplexity: pplx.ai/share
