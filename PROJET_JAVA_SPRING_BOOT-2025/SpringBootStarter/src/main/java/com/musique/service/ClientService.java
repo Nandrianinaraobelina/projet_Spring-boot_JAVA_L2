@@ -29,6 +29,10 @@ public class ClientService {
         return clientRepository.findById(id);
     }
 
+    public long countClients() {
+        return clientRepository.count();
+    }
+
     public void incrementPurchaseCount(Client client) {
         client.setPurchaseCount((client.getPurchaseCount() == null ? 0 : client.getPurchaseCount()) + 1);
         clientRepository.save(client);

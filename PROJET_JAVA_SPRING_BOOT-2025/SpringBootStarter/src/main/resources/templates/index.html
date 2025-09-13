@@ -11,39 +11,62 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     
-    <!-- Hero Section -->
-    <div class="bg-dark text-white py-5">
+    <!-- Dashboard KPIs -->
+    <div class="py-5" style="background-color: #f8f9fa;">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h1 class="display-4 fw-bold">Bienvenue sur Musique</h1>
-                    <p class="lead">Votre boutique d'équipements musicaux de qualité. Achetez l'instrument parfait pour vos besoins.</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="/equipment" class="btn btn-primary btn-lg">Voir le catalogue</a>
-                        
+            <h1 class="mb-4">Tableau de bord</h1>
+            <div class="row g-3">
+                <div class="col-12 col-md-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted">Nombre total de produits</div>
+                                    <div class="h3 mb-0" th:text="${totalProduits}">0</div>
+                                </div>
+                                <i data-feather="box"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-center">
-                    <svg class="img-fluid" width="500" height="300" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Simple SVG musical instruments illustration -->
-                        <g fill="none" stroke="white" stroke-width="3">
-                            <!-- Guitar -->
-                            <path d="M100,200 Q150,230 200,200 Q220,190 220,170 L220,50 L180,50 L180,170 Q180,180 160,185 Q120,200 80,180 Q60,170 60,150 Q60,130 80,120 Q100,110 120,120 Q140,130 140,150 Q130,170 100,170 Q80,165 80,150" />
-                            
-                            <!-- Drum -->
-                            <ellipse cx="300" cy="220" rx="50" ry="20" />
-                            <line x1="260" y1="220" x2="260" y2="150" />
-                            <line x1="340" y1="220" x2="340" y2="150" />
-                            <ellipse cx="300" cy="150" rx="50" ry="20" />
-                            
-                            <!-- Music notes -->
-                            <path d="M400,80 Q410,60 420,80 L440,80 Q450,60 460,80 L400,80" />
-                            <line x1="410" y1="80" x2="410" y2="130" />
-                            <line x1="450" y1="80" x2="450" y2="120" />
-                            <ellipse cx="405" cy="130" rx="10" ry="8" />
-                            <ellipse cx="445" cy="120" rx="10" ry="8" />
-                        </g>
-                    </svg>
+                <div class="col-12 col-md-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted">Nombre clients</div>
+                                    <div class="h3 mb-0" th:text="${totalClients}">0</div>
+                                </div>
+                                <i data-feather="users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted">Articles en stock</div>
+                                    <div class="h3 mb-0" th:text="${totalStock}">0</div>
+                                </div>
+                                <i data-feather="layers"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted">Commandes terminées</div>
+                                    <div class="h3 mb-0" th:text="${totalVentes}">0</div>
+                                </div>
+                                <i data-feather="check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,33 +119,6 @@
         </div>
     </div>
     
-    <!-- How It Works -->
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Comment ça marche</h2>
-        <div class="row">
-            <div class="col-md-4 text-center mb-4">
-                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
-                    <i data-feather="search" style="width: 48px; height: 48px;"></i>
-                </div>
-                <h4>Parcourez</h4>
-                <p>Découvrez notre large gamme d'équipements musicaux disponibles à la vente.</p>
-            </div>
-            <div class="col-md-4 text-center mb-4">
-                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
-                    <i data-feather="shopping-cart" style="width: 48px; height: 48px;"></i>
-                </div>
-                <h4>Achetez</h4>
-                <p>Commandez en toute sécurité avec un paiement simplifié.</p>
-            </div>
-            <div class="col-md-4 text-center mb-4">
-                <div class="bg-light p-4 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
-                    <i data-feather="music" style="width: 48px; height: 48px;"></i>
-                </div>
-                <h4>Jouez</h4>
-                <p>Recevez votre matériel et faites de la belle musique !</p>
-            </div>
-        </div>
-    </div>
     
     
     

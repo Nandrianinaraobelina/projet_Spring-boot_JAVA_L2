@@ -1,16 +1,12 @@
 package com.musique.controller;
 
-import com.musique.model.Equipment;
+import com.musique.service.ClientService;
 import com.musique.repository.EquipmentRepository;
+import com.musique.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller for handling home page and other general pages.
@@ -21,30 +17,35 @@ public class HomeController {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     /**
      * Display the home page with featured equipment
      */
     @GetMapping("/")
     public String home(Model model) {
         try {
-            // Get featured equipment for sale (most expensive items)
-            List<Equipment> featuredForSale = equipmentRepository.findAll(
-                    PageRequest.of(0, 4, Sort.by("priceSale").descending())
-            ).getContent();
-            model.addAttribute("featuredForSale", featuredForSale);
-            
-            // Rental removed: no featured rental section
-            
-            // Get categories for the category section
-            List<String> categories = equipmentRepository.findDistinctCategories();
-            model.addAttribute("categories", categories);
+            long totalProduits = equipmentRepository.countByActiveTrue();
+            Long totalStock = equipmentRepository.sumQuantityAvailableForActive();
+            if (totalStock == null) totalStock = 0L;
+            long totalClients = clientService.countClients();
+            long totalVentes = orderRepository.countByOrderTypeAndStatus("SALE", "COMPLETED");
+
+            model.addAttribute("totalProduits", totalProduits);
+            model.addAttribute("totalClients", totalClients);
+            model.addAttribute("totalStock", totalStock);
+            model.addAttribute("totalVentes", totalVentes);
         } catch (Exception e) {
-            // En cas d'erreur, on initialise avec des listes vides
-            model.addAttribute("featuredForSale", new ArrayList<Equipment>());
-            // Rental removed: keep empty list out
-            model.addAttribute("categories", new ArrayList<String>());
+            model.addAttribute("totalProduits", 0);
+            model.addAttribute("totalClients", 0);
+            model.addAttribute("totalStock", 0);
+            model.addAttribute("totalVentes", 0);
         }
-        
+
         return "index";
     }
 

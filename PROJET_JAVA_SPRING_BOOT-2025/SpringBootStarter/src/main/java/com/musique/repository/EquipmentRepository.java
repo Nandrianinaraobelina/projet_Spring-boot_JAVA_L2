@@ -54,4 +54,15 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
      */
     @Query("SELECT DISTINCT e.category FROM Equipment e WHERE e.active = true ORDER BY e.category")
     List<String> findDistinctCategories();
+
+    /**
+     * KPIs: total active products
+     */
+    long countByActiveTrue();
+
+    /**
+     * KPIs: total items in stock across all active products
+     */
+    @Query("SELECT COALESCE(SUM(e.quantityAvailable), 0) FROM Equipment e WHERE e.active = true")
+    Long sumQuantityAvailableForActive();
 }

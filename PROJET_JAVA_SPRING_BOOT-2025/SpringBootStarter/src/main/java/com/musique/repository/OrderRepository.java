@@ -49,6 +49,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findRecentOrders(Pageable pageable);
 
     /**
+     * KPIs: count of completed SALE orders
+     */
+    long countByOrderTypeAndStatus(String orderType, String status);
+
+    /**
      * Find rental orders that overlap with a date range for a specific equipment
      */
     @Query("SELECT o FROM Order o JOIN o.orderItems i WHERE " +
