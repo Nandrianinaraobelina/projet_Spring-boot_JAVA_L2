@@ -134,31 +134,31 @@
                                 <span th:text="${item.equipment.name}">Article</span>
                                 
                             </div>
-                            <span th:text="${'Ar ' + item.subtotal}">Ar 100.00</span>
+                            <span th:text="${#numbers.formatDecimal(item.subtotal, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</span>
                         </div>
                         
                         <hr>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>Sous-total:</span>
-                            <span th:text="${'Ar ' + subtotal}">Ar 100.00</span>
+                            <span th:text="${#numbers.formatDecimal(subtotal, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</span>
                         </div>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>Livraison:</span>
-                            <span>Ar 0.00</span>
+                            <span>0Ar</span>
                         </div>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>Réduction fidélité:</span>
-                            <span th:text="${discount != null && discount > 0 ? '- Ar ' + discount : 'Ar 0.00'}">Ar 0.00</span>
+                            <span th:text="${discount != null && discount > 0 ? ('-' + #numbers.formatDecimal(discount, 1, 'NONE', 0, 'COMMA') + 'Ar') : '0Ar'}">0Ar</span>
                         </div>
                         
                         <hr>
                         
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold">Total:</span>
-                            <span class="fw-bold" th:text="${'Ar ' + total}">Ar 100.00</span>
+                            <span class="fw-bold" th:text="${#numbers.formatDecimal(total, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</span>
                         </div>
                     </div>
                 </div>

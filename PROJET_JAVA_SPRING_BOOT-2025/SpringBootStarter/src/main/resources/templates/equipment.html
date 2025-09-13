@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        .product-card { transition: transform .15s ease, box-shadow .15s ease; }
+        .product-card:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
+        .image-wrapper { position: relative; }
+        .stock-badge { position: absolute; top: .5rem; left: .5rem; }
+        .price { font-size: 1.1rem; font-weight: 700; color: #343a40; }
+    </style>
 </head>
 <body>
     <div th:replace="fragments/header :: header"></div>
@@ -26,45 +33,37 @@
             <div class="col-md-12">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     <div class="col" th:each="equip : ${equipment}">
-                        <div class="card h-100">
-                            <img class="card-img-top"
-                                 th:src="${equip.imageUrl != null and !#strings.isEmpty(equip.imageUrl) ? equip.imageUrl : 'https://source.unsplash.com/random/600x400?music'}"
-                                 th:alt="${'Image de ' + equip.name}"
-                                 style="height: 180px; object-fit: cover;">
+                        <div class="card h-100 product-card">
+                            <div class="image-wrapper">
+                                <img class="card-img-top"
+                                     th:src="${equip.imageUrl != null and !#strings.isEmpty(equip.imageUrl) ? equip.imageUrl : ('https://picsum.photos/seed/' + equip.id + '/600/400')}"
+                                     th:alt="${'Image de ' + equip.name}"
+                                     loading="lazy" decoding="async" referrerpolicy="no-referrer" crossorigin="anonymous"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Musique'"
+                                     style="height: 180px; object-fit: cover;">
+                                <span th:if="${equip.quantityAvailable > 0}" class="badge bg-success stock-badge">En stock</span>
+                                <span th:unless="${equip.quantityAvailable > 0}" class="badge bg-danger stock-badge">Rupture</span>
+                            </div>
                             
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${equip.name}">Nom de l'Équipement</h5>
                                 <p class="card-text" th:text="${#strings.abbreviate(equip.description, 100)}">Description</p>
-                                
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Prix vente :</span>
-                                    <span class="fw-bold" th:text="${'Ar ' + equip.priceSale}">Ar 100.00</span>
-                                </div>
-                                
-                                
-                                
-                                <div class="d-flex justify-content-between">
-                                    <form th:action="@{/cart/add}" method="post">
-                                        <input type="hidden" name="equipmentId" th:value="${equip.id}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn btn-outline-primary">
-                                            <i data-feather="shopping-cart"></i> Acheter
-                                        </button>
-                                    </form>
-                                    
-                                    
-                                </div>
+                                <div class="price mb-3" th:text="${#numbers.formatDecimal(equip.priceSale, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</div>
+                                <form th:action="@{/cart/add}" method="post">
+                                    <input type="hidden" name="equipmentId" th:value="${equip.id}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-primary w-100" th:disabled="${equip.quantityAvailable <= 0}">
+                                        <i data-feather="shopping-cart"></i>
+                                        <span th:text="${equip.quantityAvailable > 0 ? 'Ajouter au panier' : 'Indisponible'}">Ajouter au panier</span>
+                                    </button>
+                                </form>
                             </div>
                             
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <small class="text-muted">
-                                    <span th:if="${equip.quantityAvailable > 0}" class="text-success">
-                                        En stock: <span th:text="${equip.quantityAvailable}">10</span>
-                                    </span>
-                                    <span th:unless="${equip.quantityAvailable > 0}" class="text-danger">
-                                        Rupture de stock
-                                    </span>
-                                </small>
+                                <div class="small text-muted">
+                                    <span th:if="${equip.quantityAvailable > 0}">En stock: <span th:text="${equip.quantityAvailable}">10</span></span>
+                                    <span th:unless="${equip.quantityAvailable > 0}" class="text-danger">Rupture de stock</span>
+                                </div>
                                 <a sec:authorize="hasRole('ADMIN')"
                                    th:if="${equip.quantityAvailable <= 0}"
                                    th:href="@{/equipment/{id}/increase-stock(id=${equip.id},quantity=10)}"

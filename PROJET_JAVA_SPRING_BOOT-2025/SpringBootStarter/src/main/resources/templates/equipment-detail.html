@@ -25,12 +25,10 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <img th:if="${equipment.imageUrl != null}" th:src="${equipment.imageUrl}" class="img-fluid rounded" 
-                             alt="Image de l'équipement">
-                        <div th:unless="${equipment.imageUrl != null}" class="bg-light rounded p-5 text-center">
-                            <i data-feather="image" style="width: 48px; height: 48px;"></i>
-                            <p class="mt-2">Aucune image disponible</p>
-                        </div>
+                        <img th:src="${equipment.imageUrl != null && !#strings.isEmpty(equipment.imageUrl) ? equipment.imageUrl : ('https://picsum.photos/seed/' + equipment.id + '/800/600')}"
+                             class="img-fluid rounded" alt="Image de l'équipement"
+                             loading="lazy" decoding="async" referrerpolicy="no-referrer" crossorigin="anonymous"
+                             onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Musique'">
                     </div>
                 </div>
             </div>

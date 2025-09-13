@@ -8,6 +8,19 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <style>
         .badge-eligible { background-color: #0ca678; }
+        .avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #4361ee, #3a86ff);
+            color: #fff; font-weight: 600;
+        }
+        .card-header-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .table thead th { white-space: nowrap; }
+        .table td, .table th { vertical-align: middle; }
+        .toolbar .form-control { max-width: 280px; }
     </style>
     </head>
 <body>
@@ -15,15 +28,22 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="mb-0">Clients</h1>
-            <a th:href="@{/clients/new}" class="btn btn-primary"><i data-feather="user-plus"></i> Nouveau client</a>
+            <div class="toolbar d-flex gap-2">
+                <input id="clientSearch" type="search" class="form-control" placeholder="Rechercher (nom, email, CIN)">
+                <a th:href="@{/clients/new}" class="btn btn-primary"><i data-feather="user-plus"></i> Nouveau client</a>
+            </div>
         </div>
         <div class="card">
+            <div class="card-header card-header-bar d-flex justify-content-between align-items-center">
+                <div class="text-muted">Total: <span th:text="${clients.size()}">0</span> client(s)</div>
+                <div class="small text-muted">Réduction fidélité: -20% dès 3 achats</div>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover table-sm align-middle" id="clientsTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Client</th>
                                 <th>Nom</th>
                                 <th>Prénom</th>
                                 <th>CIN</th>
@@ -37,27 +57,48 @@
                         </thead>
                         <tbody>
                             <tr th:each="c : ${clients}">
-                                <td th:text="${c.id}">1</td>
-                                <td th:text="${c.lastName}">Nom</td>
-                                <td th:text="${c.firstName}">Prénom</td>
-                                <td th:text="${c.cin}">CIN</td>
-                                <td th:text="${c.address}">Adresse</td>
-                                <td th:text="${c.phone}">Téléphone</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar" th:text="${(#strings.isEmpty(c.lastName) ? '' : #strings.substring(c.lastName,0,1)) + (#strings.isEmpty(c.firstName) ? '' : #strings.substring(c.firstName,0,1))}">CL</div>
+                                        <div class="small text-muted">#<span th:text="${c.id}">1</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:if="${c.lastName != null and !#strings.equalsIgnoreCase(c.lastName,'nan') and !#strings.equalsIgnoreCase(c.lastName,'n/a')}" th:text="${c.lastName}">Nom</span>
+                                    <span class="text-muted" th:unless="${c.lastName != null and !#strings.equalsIgnoreCase(c.lastName,'nan') and !#strings.equalsIgnoreCase(c.lastName,'n/a')}">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${c.firstName != null and !#strings.equalsIgnoreCase(c.firstName,'nan') and !#strings.equalsIgnoreCase(c.firstName,'n/a')}" th:text="${c.firstName}">Prénom</span>
+                                    <span class="text-muted" th:unless="${c.firstName != null and !#strings.equalsIgnoreCase(c.firstName,'nan') and !#strings.equalsIgnoreCase(c.firstName,'n/a')}">N/A</span>
+                                </td>
+                                <td>
+                                    <span class="font-monospace" th:if="${c.cin != null and !#strings.equalsIgnoreCase(c.cin,'nan') and !#strings.equalsIgnoreCase(c.cin,'n/a')}" th:text="${c.cin}">CIN</span>
+                                    <span class="text-muted" th:unless="${c.cin != null and !#strings.equalsIgnoreCase(c.cin,'nan') and !#strings.equalsIgnoreCase(c.cin,'n/a')}">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${c.address != null and !#strings.equalsIgnoreCase(c.address,'nan') and !#strings.equalsIgnoreCase(c.address,'n/a')}" th:text="${c.address}">Adresse</span>
+                                    <span class="text-muted" th:unless="${c.address != null and !#strings.equalsIgnoreCase(c.address,'nan') and !#strings.equalsIgnoreCase(c.address,'n/a')}">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${c.phone != null and !#strings.equalsIgnoreCase(c.phone,'nan') and !#strings.equalsIgnoreCase(c.phone,'n/a')}" th:text="${c.phone}">Téléphone</span>
+                                    <span class="text-muted" th:unless="${c.phone != null and !#strings.equalsIgnoreCase(c.phone,'nan') and !#strings.equalsIgnoreCase(c.phone,'n/a')}">N/A</span>
+                                </td>
                                 <td th:text="${c.email}">Email</td>
-                                <td th:text="${c.purchaseCount}">0</td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${c.purchaseCount != null ? c.purchaseCount : 0}">0</span>
+                                </td>
                                 <td>
                                     <span class="badge badge-eligible" th:if="${c.purchaseCount != null and c.purchaseCount >= 3}">-20%</span>
                                     <span class="text-muted" th:unless="${c.purchaseCount != null and c.purchaseCount >= 3}">—</span>
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a th:href="@{/clients/edit/{id}(id=${c.id})}" class="btn btn-warning">
-                                            <i data-feather="edit"></i> Modifier
+                                        <a th:href="@{/clients/edit/{id}(id=${c.id})}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Modifier">
+                                            <i data-feather="edit"></i>
                                         </a>
-                                        <a th:href="@{/clients/delete/{id}(id=${c.id})}"
-                                           class="btn btn-danger"
+                                        <a th:href="@{/clients/delete/{id}(id=${c.id})}" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Supprimer"
                                            onclick="return confirm('Confirmer la suppression de ce client ?')">
-                                            <i data-feather="trash-2"></i> Supprimer
+                                            <i data-feather="trash-2"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -74,7 +115,24 @@
     </div>
     <div th:replace="fragments/footer :: footer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script th:src="@{/js/main.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('clientSearch');
+            const table = document.getElementById('clientsTable');
+            if (input && table) {
+                input.addEventListener('input', function() {
+                    const term = this.value.toLowerCase();
+                    const rows = table.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const text = row.innerText.toLowerCase();
+                        row.style.display = text.includes(term) ? '' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 

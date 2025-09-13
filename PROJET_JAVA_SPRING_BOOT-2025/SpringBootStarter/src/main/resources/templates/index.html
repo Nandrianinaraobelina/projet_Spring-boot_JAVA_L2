@@ -12,60 +12,32 @@
     <div th:replace="fragments/header :: header"></div>
     
     <!-- Dashboard KPIs -->
-    <div class="py-5" style="background-color: #f8f9fa;">
+    <div class="py-5" style="background-color: #eef2f7;">
         <div class="container">
-            <h1 class="mb-4">Tableau de bord</h1>
-            <div class="row g-3">
-                <div class="col-12 col-md-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted">Nombre total de produits</div>
-                                    <div class="h3 mb-0" th:text="${totalProduits}">0</div>
-                                </div>
-                                <i data-feather="box"></i>
-                            </div>
-                        </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header" style="background: linear-gradient(90deg, #4361ee, #3a86ff); color: #fff;">
+                    <h1 class="h4 mb-0">Tableau de bord</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                <div class="col-12 col-md-4">
+                    <div class="border rounded p-3 bg-white h-100">
+                        <div class="text-muted">Nombre total de produits</div>
+                        <div class="display-6" th:text="${totalProduits}">0</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted">Nombre clients</div>
-                                    <div class="h3 mb-0" th:text="${totalClients}">0</div>
-                                </div>
-                                <i data-feather="users"></i>
-                            </div>
-                        </div>
+                <div class="col-12 col-md-4">
+                    <div class="border rounded p-3 bg-white h-100">
+                        <div class="text-muted">Nombre clients</div>
+                        <div class="display-6" th:text="${totalClients}">0</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted">Articles en stock</div>
-                                    <div class="h3 mb-0" th:text="${totalStock}">0</div>
-                                </div>
-                                <i data-feather="layers"></i>
-                            </div>
-                        </div>
+                <div class="col-12 col-md-4">
+                    <div class="border rounded p-3 bg-white h-100">
+                        <div class="text-muted">Nombre de matériels à vendre</div>
+                        <div class="display-6" th:text="${totalStock}">0</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted">Commandes terminées</div>
-                                    <div class="h3 mb-0" th:text="${totalVentes}">0</div>
-                                </div>
-                                <i data-feather="check-circle"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -73,47 +45,45 @@
     </div>
     
     <!-- Featured Categories -->
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Catégories d'équipements</h2>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header" style="background:#f8f9fa;">
+                <h2 class="h5 mb-0">Catégories d'équipements</h2>
+            </div>
+            <div class="card-body">
+                <div class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
+                <div class="border rounded p-3 h-100 text-center bg-white">
                         <i data-feather="disc" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
                         <h5 class="card-title">Guitares</h5>
                         <p class="card-text">Guitares électriques, acoustiques et basses des meilleures marques.</p>
                         <a href="/equipment?category=guitar" class="btn btn-outline-primary">Explorer</a>
-                    </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
+                <div class="border rounded p-3 h-100 text-center bg-white">
                         <i data-feather="speaker" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
                         <h5 class="card-title">Amplificateurs</h5>
                         <p class="card-text">Des amplis d'entraînement aux stacks de scène.</p>
                         <a href="/equipment?category=amplifier" class="btn btn-outline-primary">Explorer</a>
-                    </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
+                <div class="border rounded p-3 h-100 text-center bg-white">
                         <i data-feather="radio" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
                         <h5 class="card-title">Claviers</h5>
                         <p class="card-text">Pianos numériques, synthétiseurs et contrôleurs MIDI.</p>
                         <a href="/equipment?category=keyboard" class="btn btn-outline-primary">Explorer</a>
-                    </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
+                <div class="border rounded p-3 h-100 text-center bg-white">
                         <i data-feather="mic" style="width: 64px; height: 64px; margin-bottom: 15px;"></i>
                         <h5 class="card-title">Microphones</h5>
                         <p class="card-text">Microphones professionnels pour le studio et la scène.</p>
                         <a href="/equipment?category=microphone" class="btn btn-outline-primary">Explorer</a>
-                    </div>
+                </div>
+            </div>
                 </div>
             </div>
         </div>
