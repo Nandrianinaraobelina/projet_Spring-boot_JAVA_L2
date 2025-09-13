@@ -57,8 +57,8 @@
                         
                         <div class="mb-2">
                             <span class="text-muted">Disponibilité :</span>
-                            <span th:if="${equipment.available}" class="badge bg-success">En stock</span>
-                            <span th:unless="${equipment.available}" class="badge bg-danger">Réservé</span>
+                            <span th:if="${equipment.quantityAvailable > 0}" class="badge bg-success">En stock</span>
+                            <span th:unless="${equipment.quantityAvailable > 0}" class="badge bg-danger">Rupture de stock</span>
                         </div>
                         <div class="mb-2">
                             <span class="text-muted">Quantité disponible :</span>
@@ -73,7 +73,11 @@
                             data-bs-toggle="modal" data-bs-target="#addToCartModal">
                         <i data-feather="shopping-cart"></i> Ajouter au panier
                     </button>
-                    
+                    <a th:if="${equipment.quantityAvailable <= 0}"
+                       th:href="@{/equipment/{id}/increase-stock(id=${equipment.id},quantity=10)}"
+                       class="btn btn-outline-primary">
+                        Ajouter 10 au stock
+                    </a>
                     
                 </div>
             </div>

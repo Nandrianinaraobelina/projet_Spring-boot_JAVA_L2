@@ -13,6 +13,11 @@
     
     <div class="container mt-4">
         <h1 class="mb-4">Gestion du Stock</h1>
+        <form th:action="@{/equipment/stock/set-all-to-ten}" method="post" class="mb-3">
+            <button type="submit" class="btn btn-success">
+                <i data-feather="layers"></i> Mettre tous les stocks à 10
+            </button>
+        </form>
         
         <div th:if="${param.stockUpdated}" class="alert alert-success">
             Le stock a été mis à jour avec succès.

@@ -12,6 +12,20 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('client','admin','vendeur') DEFAULT 'client' NOT NULL
 );
 
+-- Table CLIENTS (CRM léger)
+DROP TABLE IF EXISTS clients;
+CREATE TABLE IF NOT EXISTS clients (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    cin VARCHAR(50) NOT NULL UNIQUE,
+    adresse VARCHAR(255),
+    telephone VARCHAR(50),
+    mail VARCHAR(150) NOT NULL UNIQUE,
+    purchase_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Table MATERIELS DE MUSIQUE
 DROP TABLE IF EXISTS equipment;
 CREATE TABLE IF NOT EXISTS equipment (

@@ -69,7 +69,7 @@ public class OrderController {
         }
         
         // Get orders for this user
-        Iterable<Order> orders = orderRepository.findByUserEmailOrderByOrderDateDesc(auth.getName());
+        Iterable<Order> orders = orderRepository.findByUserEmailAndDeletedFalseOrderByOrderDateDesc(auth.getName());
         
         // Convertir l'iterable en liste pour pouvoir vérifier si elle est vide
         java.util.List<Order> orderList = new java.util.ArrayList<>();
@@ -81,6 +81,92 @@ public class OrderController {
         model.addAttribute("orders", orderList);
         
         return "orders";
+    }
+
+    /**
+     * Supprimer (soft delete) une commande
+     */
+    @PostMapping("/{id}/delete")
+    public String softDeleteOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Order> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Commande non trouvée");
+            return "redirect:/orders";
+        }
+        Order order = orderOpt.get();
+        order.setDeleted(true);
+        orderRepository.save(order);
+        redirectAttributes.addFlashAttribute("successMessage", "Commande déplacée dans la corbeille");
+        return "redirect:/orders";
+    }
+
+    /**
+     * Supprimer (soft delete) toutes les commandes de l'utilisateur connecté
+     */
+    @PostMapping("/delete-all")
+    public String softDeleteAllOrders(RedirectAttributes redirectAttributes) {
+        org.springframework.security.core.Authentication auth = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName().equals("anonymousUser")) {
+            return "redirect:/login";
+        }
+        java.util.List<Order> orders = orderRepository.findByUserEmailAndDeletedFalseOrderByOrderDateDesc(auth.getName());
+        if (orders.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Aucune commande à supprimer");
+            return "redirect:/orders";
+        }
+        for (Order order : orders) {
+            order.setDeleted(true);
+        }
+        orderRepository.saveAll(orders);
+        redirectAttributes.addFlashAttribute("successMessage", "Toutes les commandes ont été déplacées dans la corbeille");
+        return "redirect:/orders";
+    }
+
+    /**
+     * Corbeille: liste des commandes supprimées
+     */
+    @GetMapping({"/trash", "/trash/"})
+    public String trash(Model model) {
+        org.springframework.security.core.Authentication auth = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName().equals("anonymousUser")) {
+            return "redirect:/login";
+        }
+        java.util.List<Order> deletedOrders = orderRepository.findByUserEmailAndDeletedTrueOrderByOrderDateDesc(auth.getName());
+        model.addAttribute("deletedOrders", deletedOrders);
+        return "orders-trash";
+    }
+
+    /**
+     * Restaurer une commande supprimée
+     */
+    @PostMapping("/{id}/restore")
+    public String restore(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Order> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isPresent()) {
+            Order order = orderOpt.get();
+            order.setDeleted(false);
+            orderRepository.save(order);
+            redirectAttributes.addFlashAttribute("successMessage", "Commande restaurée");
+        }
+        return "redirect:/orders/trash";
+    }
+
+    /**
+     * Vider la corbeille
+     */
+    @PostMapping("/trash/empty")
+    public String emptyTrash(RedirectAttributes redirectAttributes) {
+        org.springframework.security.core.Authentication auth = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName().equals("anonymousUser")) {
+            return "redirect:/login";
+        }
+        java.util.List<Order> deletedOrders = orderRepository.findByUserEmailAndDeletedTrueOrderByOrderDateDesc(auth.getName());
+        orderRepository.deleteAll(deletedOrders);
+        redirectAttributes.addFlashAttribute("successMessage", "Corbeille vidée");
+        return "redirect:/orders/trash";
     }
 
     /**

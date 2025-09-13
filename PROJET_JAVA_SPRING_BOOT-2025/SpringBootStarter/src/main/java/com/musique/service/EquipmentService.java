@@ -77,6 +77,20 @@ public class EquipmentService {
     }
 
     /**
+     * Met tous les stocks à 10 et rend les équipements disponibles
+     */
+    @Transactional
+    public int setAllStocksToTen() {
+        List<Equipment> all = equipmentRepository.findAll();
+        for (Equipment eq : all) {
+            eq.setQuantityAvailable(10);
+            eq.setAvailable(true);
+        }
+        equipmentRepository.saveAll(all);
+        return all.size();
+    }
+
+    /**
      * Met à jour le stock d'un équipement
      */
     @Transactional

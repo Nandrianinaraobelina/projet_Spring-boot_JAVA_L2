@@ -1,6 +1,8 @@
 package com.musique.controller;
 
 import com.musique.model.Equipment;
+import com.musique.model.Client;
+import com.musique.repository.ClientRepository;
 import com.musique.model.OrderItem;
 import com.musique.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class CartController {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
     /**
      * Display the cart contents
      */
@@ -32,6 +37,15 @@ public class CartController {
         List<OrderItem> cart = getCart(session);
         model.addAttribute("cartItems", cart);
         
+        // Clients list for selection
+        List<Client> clients = clientRepository.findAll();
+        model.addAttribute("clients", clients);
+        Long selectedClientId = (Long) session.getAttribute("selectedClientId");
+        model.addAttribute("selectedClientId", selectedClientId);
+        if (selectedClientId != null) {
+            clientRepository.findById(selectedClientId).ifPresent(c -> model.addAttribute("clientSelected", c));
+        }
+
         // Calculate totals
         BigDecimal total = calculateTotal(cart);
         model.addAttribute("total", total);
@@ -51,6 +65,21 @@ public class CartController {
         }
         
         return "cart";
+    }
+
+    /**
+     * Select a client for the current cart (used for invoicing)
+     */
+    @PostMapping("/select-client")
+    public String selectClient(@RequestParam Long clientId, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (clientId != null && clientRepository.findById(clientId).isPresent()) {
+            session.setAttribute("selectedClientId", clientId);
+            redirectAttributes.addFlashAttribute("successMessage", "Client sélectionné pour la commande.");
+        } else {
+            session.removeAttribute("selectedClientId");
+            redirectAttributes.addFlashAttribute("errorMessage", "Client invalide.");
+        }
+        return "redirect:/cart";
     }
 
     /**

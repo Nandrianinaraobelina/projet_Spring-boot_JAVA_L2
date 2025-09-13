@@ -12,7 +12,19 @@
     <div th:replace="fragments/header :: header"></div>
     
     <div class="container mt-4">
-        <h1 class="mb-4">Mes Commandes</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Mes Commandes</h1>
+            <div class="d-flex gap-2">
+                <form th:action="@{/orders/delete-all}" method="post">
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Déplacer toutes vos commandes dans la corbeille ?')">
+                        <i data-feather="x-circle"></i> Tout supprimer
+                    </button>
+                </form>
+                <a class="btn btn-outline-secondary" th:href="@{/orders/trash}">
+                    <i data-feather="trash"></i> Corbeille
+                </a>
+            </div>
+        </div>
         
         <div th:if="${orders.empty}" class="alert alert-info">
             <p>Vous n'avez pas encore de commandes. <a th:href="@{/equipment}" class="alert-link">Parcourez nos équipements</a> pour passer votre première commande.</p>
@@ -21,11 +33,11 @@
         <div th:unless="${orders.empty}" class="accordion" id="ordersAccordion">
             <div class="card mb-3" th:each="order, status : ${orders}">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light" 
-                     th:id="'heading-' + ${order.id}">
+                     th:id="${'heading-' + order.id}">
                     <div class="d-flex align-items-center">
                         <button class="btn btn-link text-decoration-none collapsed" type="button" 
-                                data-bs-toggle="collapse" th:data-bs-target="'#collapse-' + ${order.id}"
-                                aria-expanded="false" th:aria-controls="'collapse-' + ${order.id}">
+                                data-bs-toggle="collapse" th:data-bs-target="${'#collapse-' + order.id}"
+                                aria-expanded="false" th:aria-controls="${'collapse-' + order.id}">
                             <i data-feather="chevron-down" class="me-1"></i>
                             Commande #<span th:text="${order.id}">123</span>
                         </button>
@@ -42,7 +54,7 @@
                     </div>
                 </div>
                 
-                <div th:id="'collapse-' + ${order.id}" class="collapse" th:aria-labelledby="'heading-' + ${order.id}" 
+                <div th:id="${'collapse-' + order.id}" class="collapse" th:aria-labelledby="${'heading-' + order.id}" 
                      data-bs-parent="#ordersAccordion">
                     <div class="card-body">
                         <div class="row mb-3">
@@ -52,7 +64,7 @@
                                     <li><strong>Type de Commande:</strong> <span th:text="${order.orderType}">VENTE</span></li>
                                     <li><strong>Date de Commande:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">01-01-2023 12:30</span></li>
                                     <li><strong>Montant Total:</strong> <span th:text="${'Ar ' + order.totalAmount}">Ar 100.00</span></li>
-                                    <li th:if="${order.isRental()}">
+                                    <li th:if="${order.orderType == 'RENTAL'}">
                                         <strong>Période de Location:</strong> 
                                         <span th:text="${#temporals.format(order.rentalStartDate, 'dd-MM-yyyy')}">01-01-2023</span> 
                                         au 
@@ -61,27 +73,21 @@
                                 </ul>
                             </div>
                             <div class="col-md-6 text-md-end">
-                                <a th:href="@{'/orders/' + ${order.id} + '/confirmation'}" class="btn btn-outline-primary me-2">
+                                <a th:href="@{/orders/{id}/confirmation(id=${order.id})}" class="btn btn-outline-primary me-2">
                                     <i data-feather="file-text"></i> Voir détails
                                 </a>
                                 <button th:data-order-id="${order.id}" onclick="printOrder(this.getAttribute('data-order-id'))" class="btn btn-outline-dark me-2">
                                     <i data-feather="printer"></i> Imprimer
                                 </button>
-                                
+                                <form th:action="@{/orders/{id}/delete(id=${order.id})}" method="post" style="display:inline">
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Supprimer cette commande ?')">
+                                        <i data-feather="trash-2"></i> Supprimer
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         
-                        <h6>Articles de la Commande</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-borderless">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Article</th>
-                                        <th>Quantité</th>
-                                        <th>Prix</th>
-                                        <th>Sous-total</th>
-                                    </tr>
-                                </thead>
+                
                                 <tbody>
                                     <tr th:each="item : ${order.orderItems}">
                                         <td>

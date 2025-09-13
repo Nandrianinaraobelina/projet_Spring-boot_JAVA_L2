@@ -165,7 +165,11 @@ public class EquipmentController {
     // Rental removed: reservation route deleted
 
     @GetMapping("/{id}/increase-stock")
-    public String increaseStock(@PathVariable Long id, @RequestParam(defaultValue = "10") int quantity) {
+    public String increaseStock(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "10") int quantity,
+            @org.springframework.web.bind.annotation.RequestHeader(value = "Referer", required = false) String referer
+    ) {
         try {
             Optional<Equipment> equipmentOpt = equipmentRepository.findById(id);
             
@@ -179,7 +183,11 @@ public class EquipmentController {
             equipment.setAvailable(true);
             equipmentRepository.save(equipment);
             
-            return "redirect:/equipment/stock?stockUpdated=true&equipmentId=" + id;
+            // Rediriger de préférence vers la page précédente ou sinon vers le catalogue
+            if (referer != null && !referer.isBlank()) {
+                return "redirect:" + referer;
+            }
+            return "redirect:/equipment?stockUpdated=true&equipmentId=" + id;
         } catch (Exception e) {
             System.err.println("Erreur lors de la mise à jour du stock : " + e.getMessage());
             return "redirect:/equipment/stock?error=true";
@@ -198,6 +206,19 @@ public class EquipmentController {
             System.err.println("Erreur lors de l'affichage de la gestion du stock : " + e.getMessage());
             model.addAttribute("errorMessage", "Erreur lors du chargement de la gestion du stock");
             return "admin/stock-management";
+        }
+    }
+
+    /**
+     * Met à 10 le stock de tous les équipements
+     */
+    @org.springframework.web.bind.annotation.PostMapping("/stock/set-all-to-ten")
+    public String setAllStocksToTen(org.springframework.ui.Model model) {
+        try {
+            int updated = equipmentService.setAllStocksToTen();
+            return "redirect:/equipment/stock?stockUpdated=true&updated=" + updated;
+        } catch (Exception e) {
+            return "redirect:/equipment/stock?error=true";
         }
     }
 }

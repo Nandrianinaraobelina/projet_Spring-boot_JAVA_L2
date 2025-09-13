@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitButton.dataset.originalContent = submitButton.innerHTML;
                 }
                 
-                // Show loading spinner
-                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+                // Indicateur de chargement
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Chargement...';
                 submitButton.disabled = true;
             }
         });

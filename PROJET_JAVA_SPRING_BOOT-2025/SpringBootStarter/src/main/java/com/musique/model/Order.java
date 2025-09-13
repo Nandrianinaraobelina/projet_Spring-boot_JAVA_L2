@@ -60,6 +60,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     // Getters et setters pour tous les champs
 
     public Long getId() {
@@ -172,6 +175,14 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

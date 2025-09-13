@@ -12,16 +12,45 @@
     <div th:replace="fragments/header :: header"></div>
     
     <div class="container mt-4">
+        <div class="card border-0 mb-4" style="background: linear-gradient(135deg, #4361ee, #4cc9f0); color: #fff;">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
+                    <i data-feather="user" style="width: 32px; height: 32px; color: #fff;"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0" th:text="${user.name}">Nom d'utilisateur</h3>
+                    <small class="d-block opacity-75" th:text="${user.email}">email@example.com</small>
+                </div>
+                <span class="ms-auto badge bg-light text-dark" th:text="${#strings.toUpperCase(user.role)}">CLIENT</span>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-3">
                 <div class="card">
-                    <div class="card-body text-center">
-                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3" 
-                             style="width: 150px; height: 150px;">
-                            <i data-feather="user" style="width: 64px; height: 64px;"></i>
-                        </div>
-                        <h5 class="card-title" th:text="${user.name}">Nom d'utilisateur</h5>
-                        <p class="text-muted" th:text="${user.email}">email@example.com</p>
+                    <div class="card-body">
+                        <h6 class="text-muted mb-3">Aperçu du compte</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row g-2">
+                                    <div class="col-4 text-muted">Nom</div>
+                                    <div class="col-8 fw-semibold text-break" th:text="${user.name}">Nom</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row g-2">
+                                    <div class="col-4 text-muted">Email</div>
+                                    <div class="col-8 fw-semibold text-break" th:text="${user.email}">email@example.com</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row g-2">
+                                    <div class="col-4 text-muted">Rôle</div>
+                                    <div class="col-8">
+                                        <span class="badge bg-primary" th:text="${#strings.toUpperCase(user.role)}">CLIENT</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -33,20 +62,19 @@
                     </div>
                     <div class="card-body">
                         <form th:action="@{/profile}" method="post">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="name" name="name" 
-                                       th:value="${user.name}" required>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="name" name="name" th:value="${user.name}" placeholder="Nom" required>
+                                <label for="name">Nom</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                       th:value="${user.email}" readonly>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" th:value="${user.email}" placeholder="Email" readonly>
+                                <label for="email">Email</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Nouveau mot de passe (optionnel)</label>
-                                <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Nouveau mot de passe" autocomplete="new-password">
+                                <label for="password">Nouveau mot de passe (optionnel)</label>
                             </div>
+                            <small class="text-muted d-block mb-3">Laissez vide si vous ne souhaitez pas changer le mot de passe.</small>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">
                                     <i data-feather="save"></i> Enregistrer les modifications

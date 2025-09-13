@@ -28,6 +28,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
     List<Order> findByUserEmailOrderByOrderDateDesc(String email);
 
+    List<Order> findByUserEmailAndDeletedFalseOrderByOrderDateDesc(String email);
+
+    List<Order> findByUserEmailAndDeletedTrueOrderByOrderDateDesc(String email);
+
     /**
      * Find orders by status
      */

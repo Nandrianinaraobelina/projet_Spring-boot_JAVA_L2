@@ -76,6 +76,18 @@
                         <h5>Récapitulatif de la Commande</h5>
                     </div>
                     <div class="card-body">
+                        <form th:action="@{/cart/select-client}" method="post" class="mb-3">
+                            <label for="clientId" class="form-label">Client</label>
+                            <select id="clientId" name="clientId" class="form-select" th:value="${selectedClientId}">
+                                <option th:value="${null}">-- Sélectionner un client --</option>
+                                <option th:each="c : ${clients}" th:value="${c.id}" th:selected="${selectedClientId == c.id}"
+                                        th:text="${c.lastName + ' ' + c.firstName + ' (' + c.email + ')'}">Client</option>
+                            </select>
+                            <small class="text-muted">Sélectionnez le client associé à cette commande pour la facture.</small>
+                            <div class="mt-2 text-end">
+                                <button class="btn btn-outline-primary btn-sm" type="submit">Associer</button>
+                            </div>
+                        </form>
                         <div class="d-flex justify-content-between mb-3">
                             <span>Sous-total:</span>
                             <span th:text="${'Ar ' + total}">Ar 100.00</span>

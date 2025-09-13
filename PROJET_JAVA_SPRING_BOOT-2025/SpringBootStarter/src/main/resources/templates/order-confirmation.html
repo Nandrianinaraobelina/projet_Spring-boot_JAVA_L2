@@ -48,18 +48,18 @@
                             <div class="col-md-6">
                                 <h5>Musique</h5>
                                 <address>
-                                    123 Rue de la Musique<br>
-                                    75000 Paris<br>
-                                    France<br>
-                                    Tél: +33 1 23 45 67 89<br>
-                                    Email: contact@musique.fr
+                                    Fianarantsoa<br>
+                                    andrainjato<br>
+                                    Madagascar<br>
+                                    Tél: +261 38 59 412 11<br>
+                                    Email: raobelinaherynandrianina@gmail.com
                                 </address>
                             </div>
                             <div class="col-md-6 text-end">
                                 <h5>Facture #<span th:text="${order.id}">12345</span></h5>
                                 <p>
                                     <strong>Date :</strong> 
-                                    <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy')}">01/01/2023</span><br>
+                                    <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy')}">01/09/2025</span><br>
                                     <strong>Client :</strong> 
                                     <span th:text="${order.shippingName}">Nom du client</span>
                                 </p>
@@ -93,22 +93,22 @@
                                 <tr th:each="item : ${order.orderItems}">
                                     <td th:text="${item.equipment.name}">Nom de l'équipement</td>
                                     <td th:text="${item.quantity}">1</td>
-                                    <td th:text="${'€' + item.price}">€100.00</td>
-                                    <td th:text="${'€' + item.subtotal}">€100.00</td>
+                                    <td th:text="${'Ar' + item.price}">Ar 100.00</td>
+                                    <td th:text="${'Ar' + item.subtotal}"> Ar 100.00</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>Sous-total :</strong></td>
-                                    <td><strong th:text="${'€' + order.totalAmount}">€100.00</strong></td>
+                                    <td><strong th:text="${'Ar' + order.totalAmount}">Ar 100.00</strong></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>TVA (20%) :</strong></td>
-                                    <td><strong th:text="${'€' + (order.totalAmount.multiply(new java.math.BigDecimal('0.20')))}">€20.00</strong></td>
+                                    <td><strong th:text="${'Ar ' + (order.totalAmount.multiply(new java.math.BigDecimal('0.20')))}"> Ar 20.00</strong></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>Total TTC :</strong></td>
-                                    <td><strong th:text="${'€' + (order.totalAmount.multiply(new java.math.BigDecimal('1.20')))}">€120.00</strong></td>
+                                    <td><strong th:text="${'Ar' + (order.totalAmount.multiply(new java.math.BigDecimal('1.20')))}">Ar 120.00</strong></td>
                                 </tr>
                             </tfoot>
                         </table>

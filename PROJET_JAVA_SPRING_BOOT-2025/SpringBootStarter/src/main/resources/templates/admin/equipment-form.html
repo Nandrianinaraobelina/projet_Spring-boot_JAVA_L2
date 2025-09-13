@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Form - Musique</title>
+    <title>Formulaire Équipement - Musique</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
@@ -13,14 +13,14 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-header">
-                <h2 th:text="${equipment.id == null ? 'Add New Equipment' : 'Edit Equipment'}">Equipment Form</h2>
+                <h2 th:text="${equipment.id == null ? 'Ajouter un équipement' : 'Modifier l\'équipement'}">Formulaire Équipement</h2>
             </div>
             <div class="card-body">
                 <form th:action="@{/admin/equipment/save}" th:object="${equipment}" method="post">
                     <input type="hidden" th:field="*{id}" />
                     
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Nom</label>
                         <input type="text" class="form-control" id="name" th:field="*{name}" required>
                         <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
                     </div>
@@ -32,7 +32,7 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="priceSale" class="form-label">Sale Price (€)</label>
+                            <label for="priceSale" class="form-label">Prix de vente (Ar)</label>
                             <input type="number" class="form-control" id="priceSale" th:field="*{priceSale}" step="0.01" min="0" required>
                             <div class="text-danger" th:if="${#fields.hasErrors('priceSale')}" th:errors="*{priceSale}">Price Error</div>
                         </div>
@@ -45,20 +45,20 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="quantityAvailable" class="form-label">Quantity Available</label>
+                        <label for="quantityAvailable" class="form-label">Quantité disponible</label>
                         <input type="number" class="form-control" id="quantityAvailable" th:field="*{quantityAvailable}" min="0" required>
                         <div class="text-danger" th:if="${#fields.hasErrors('quantityAvailable')}" th:errors="*{quantityAvailable}">Quantity Error</div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="imageUrl" class="form-label">Image URL</label>
+                        <label for="imageUrl" class="form-label">URL de l'image</label>
                         <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}">
-                        <small class="form-text text-muted">Enter a URL for the equipment image</small>
+                        <small class="form-text text-muted">Entrez une URL pour l'image de l'équipement</small>
                     </div>
                     
                     <div class="d-flex justify-content-between">
-                        <a th:href="@{/admin/equipment}" class="btn btn-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save Equipment</button>
+                        <a th:href="@{/admin/equipment}" class="btn btn-secondary">Annuler</a>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </div>
                 </form>
             </div>

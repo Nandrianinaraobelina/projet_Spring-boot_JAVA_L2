@@ -1,12 +1,14 @@
 package com.musique.controller;
 
 import com.musique.model.Equipment;
+import com.musique.model.Client;
 import com.musique.model.Order;
 import com.musique.model.OrderItem;
 import com.musique.model.User;
 import com.musique.repository.EquipmentRepository;
 import com.musique.repository.OrderRepository;
 import com.musique.repository.UserRepository;
+import com.musique.service.ClientService;
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,6 +40,9 @@ public class CheckoutController {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    @Autowired
+    private ClientService clientService;
+
     @GetMapping
     public String showCheckout(Model model, HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,7 +56,7 @@ public class CheckoutController {
             return "redirect:/cart";
         }
 
-        BigDecimal total = cart.stream()
+        BigDecimal subtotal = cart.stream()
                 .map(item -> {
                     if (item.getPrice() != null && item.getQuantity() != null) {
                         return item.getPrice().multiply(new BigDecimal(item.getQuantity()));
@@ -60,11 +65,35 @@ public class CheckoutController {
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        // Calcul réduction fidélité (20% si >= 3 achats)
+        Optional<User> user = userRepository.findByEmail(auth.getName());
+        boolean eligibleDiscount = user.flatMap(u -> clientService.findByEmailIgnoreCase(u.getEmail()))
+                .map(c -> c.getPurchaseCount() != null && c.getPurchaseCount() >= 3)
+                .orElse(false);
+
+        BigDecimal discount = eligibleDiscount ? subtotal.multiply(new BigDecimal("0.20")) : BigDecimal.ZERO;
+        BigDecimal total = subtotal.subtract(discount);
+
         model.addAttribute("cartItems", cart);
+        model.addAttribute("subtotal", subtotal);
+        model.addAttribute("discount", discount);
         model.addAttribute("total", total);
 
-        Optional<User> user = userRepository.findByEmail(auth.getName());
         user.ifPresent(u -> model.addAttribute("user", u));
+
+        // Afficher le client sélectionné s'il a été choisi dans le panier (priorité à l'ID)
+        Object selectedId = session.getAttribute("selectedClientId");
+        if (selectedId instanceof Long selectedClientId) {
+            clientService.findById(selectedClientId)
+                    .ifPresent(c -> model.addAttribute("clientSelected", c));
+        } else {
+            // fallback: par email utilisateur
+            clientService.findByEmailIgnoreCase(user.map(User::getEmail).orElse(""))
+                    .ifPresent(c -> model.addAttribute("clientSelected", c));
+        }
+
+        // Rôle utilisateur pour affichage
+        model.addAttribute("userRole", user.map(User::getRole).orElse("client").toUpperCase());
 
         return "checkout";
     }
@@ -137,6 +166,25 @@ public class CheckoutController {
                     equipment.setAvailable(newStock > 0);
                     equipmentRepository.save(equipment);
                 }
+            }
+
+            // Enregistrer/mettre à jour le client acheteur (CRM léger)
+            Client client = clientService.findByEmailIgnoreCase(user.getEmail()).orElseGet(() -> {
+                Client c = new Client();
+                String[] parts = (name != null ? name : user.getName()).trim().split(" ", 2);
+                c.setFirstName(parts.length > 1 ? parts[0] : (name != null ? name : user.getName()));
+                c.setLastName(parts.length > 1 ? parts[1] : "");
+                c.setEmail(user.getEmail());
+                c.setCin("N/A");
+                c.setAddress(address);
+                c.setPhone("");
+                return c;
+            });
+            clientService.incrementPurchaseCount(client);
+
+            // Réduction 20% si plus de 3 achats (à appliquer prochain achat)
+            if (client.getPurchaseCount() != null && client.getPurchaseCount() >= 3) {
+                // TODO: marquer un flag de réduction ou générer un coupon; ici on ne modifie pas la commande en cours
             }
 
             session.removeAttribute("cart");
