@@ -36,9 +36,7 @@ public class EquipmentService {
     }
 
 
-    public List<Equipment> findRentableEquipment() {
-        return equipmentRepository.findRentableEquipment();
-    }
+    // Rental removed: no rentable equipment
 
     public List<Equipment> findAvailableEquipment() {
         return equipmentRepository.findByAvailableTrueAndActiveTrue();
@@ -69,8 +67,7 @@ public class EquipmentService {
      */
     @Transactional
     public int restockAllOutOfStockEquipments() {
-        List<Equipment> outOfStock = equipmentRepository.findByQuantityAvailableGreaterThan(0);
-        // On veut ceux à 0, donc on récupère tous puis on filtre
+        // Récupère ceux à 0 en filtrant
         List<Equipment> zeroStock = equipmentRepository.findAll().stream()
                 .filter(eq -> eq.getQuantityAvailable() != null && eq.getQuantityAvailable() == 0)
                 .toList();

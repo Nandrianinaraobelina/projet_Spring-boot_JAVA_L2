@@ -52,12 +52,9 @@
                         <h5 class="card-title">Informations de prix</h5>
                         <div class="mb-2">
                             <span class="text-muted">Prix de vente :</span>
-                            <span class="h5 ms-2" th:text="${#numbers.formatDecimal(equipment.priceSale, 1, 'POINT', 2, 'COMMA') + ' €'}">0.00 €</span>
+                            <span class="h5 ms-2" th:text="${#numbers.formatDecimal(equipment.priceSale, 1, 'POINT', 2, 'COMMA') + ' Ar'}">0.00 Ar</span>
                         </div>
-                        <div class="mb-2">
-                            <span class="text-muted">Prix de location/jour :</span>
-                            <span class="h5 ms-2" th:text="${#numbers.formatDecimal(equipment.priceRental, 1, 'POINT', 2, 'COMMA') + ' €'}">0.00 €</span>
-                        </div>
+                        
                         <div class="mb-2">
                             <span class="text-muted">Disponibilité :</span>
                             <span th:if="${equipment.available}" class="badge bg-success">En stock</span>
@@ -77,11 +74,7 @@
                         <i data-feather="shopping-cart"></i> Ajouter au panier
                     </button>
                     
-                    <button type="button" class="btn btn-outline-primary"
-                            th:disabled="${!equipment.available || equipment.quantityAvailable <= 0}"
-                            data-bs-toggle="modal" data-bs-target="#rentModal">
-                        <i data-feather="calendar"></i> Louer
-                    </button>
+                    
                 </div>
             </div>
         </div>
@@ -104,7 +97,7 @@
                             <p class="card-text" th:text="${#strings.abbreviate(related.description, 100)}">Description</p>
                             
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="h5 mb-0" th:text="${#numbers.formatDecimal(related.priceSale, 1, 'POINT', 2, 'COMMA') + ' €'}">0.00 €</span>
+                                <span class="h5 mb-0" th:text="${#numbers.formatDecimal(related.priceSale, 1, 'POINT', 2, 'COMMA') + ' Ar'}">0.00 Ar</span>
                                 <span th:if="${related.available}" class="badge bg-success">En stock</span>
                                 <span th:unless="${related.available}" class="badge bg-danger">Réservé</span>
                             </div>
@@ -146,33 +139,7 @@
         </div>
     </div>
 
-    <!-- Modal Location -->
-    <div class="modal fade" id="rentModal" tabindex="-1" aria-labelledby="rentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="rentModalLabel">Louer l'équipement</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/equipment/{id}/reserve(id=${equipment.id})}" method="get">
-                        <div class="mb-3">
-                            <label for="startDate" class="form-label">Date de début</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="endDate" class="form-label">Date de fin</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" required>
-                        </div>
-                        <div class="text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-primary">Procéder à la location</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     
     <div th:replace="fragments/footer :: footer"></div>
     

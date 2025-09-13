@@ -25,6 +25,7 @@
                     </div>
                     
                     <form th:action="@{/register}" method="post">
+                        <input type="hidden" id="name" name="name">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName" class="form-label">Prénom</label>
@@ -39,7 +40,7 @@
                         
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
                         </div>
                         
                         <div class="mb-3">
@@ -83,13 +84,13 @@
                         
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password">
                             <div class="form-text">Le mot de passe doit contenir au moins 8 caractères.</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required autocomplete="new-password">
                         </div>
                         
                         <div class="mb-3 form-check">
@@ -145,6 +146,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     if (form) {
         form.addEventListener('submit', function(event) {
+            // Set hidden 'name' from firstName + lastName or fallback to email
+            const firstName = (document.getElementById('firstName')?.value || '').trim();
+            const lastName = (document.getElementById('lastName')?.value || '').trim();
+            const email = (document.getElementById('email')?.value || '').trim();
+            const fullName = (firstName + ' ' + lastName).trim();
+            const nameInput = document.getElementById('name');
+            if (nameInput) {
+                nameInput.value = fullName || email;
+            }
             const phone = document.getElementById('phone').value;
             const postalCode = document.getElementById('postalCode').value;
 

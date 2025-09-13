@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Initializes the database with sample data when the application starts.
@@ -78,18 +77,18 @@ public class DatabaseInitializer implements CommandLineRunner {
     
     private void initializeEquipment() {
         List<Equipment> equipmentList = Arrays.asList(
-            createEquipment("Fender Stratocaster", "Professional electric guitar with legendary tone and playability", new BigDecimal("999.99"), new BigDecimal("49.99"), "GUITAR", 5, "/img/guitar.svg"),
-            createEquipment("Gibson Les Paul", "Classic electric guitar with rich, warm tone", new BigDecimal("1299.99"), new BigDecimal("59.99"), "GUITAR", 3, "/img/guitar.svg"),
-            createEquipment("Yamaha P-125 Digital Piano", "Compact digital piano with 88 weighted keys", new BigDecimal("699.99"), new BigDecimal("39.99"), "KEYBOARD", 8, "/img/keyboard.svg"),
-            createEquipment("Pearl Export Drum Set", "Complete 5-piece drum kit with hardware", new BigDecimal("799.99"), new BigDecimal("69.99"), "DRUMS", 4, "/img/drums.svg"),
-            createEquipment("Shure SM58 Microphone", "Industry-standard dynamic vocal microphone", new BigDecimal("99.99"), new BigDecimal("9.99"), "MICROPHONE", 20, "/img/microphone.svg"),
-            createEquipment("Ibanez RG550", "High-performance electric guitar for fast players", new BigDecimal("899.99"), new BigDecimal("45.99"), "GUITAR", 7, "/img/guitar.svg"),
-            createEquipment("Roland TD-17KVX Electronic Drum Kit", "Professional electronic drum kit with mesh heads", new BigDecimal("1599.99"), new BigDecimal("79.99"), "DRUMS", 3, "/img/drums.svg"),
-            createEquipment("Korg Minilogue Synthesizer", "Polyphonic analog synthesizer with versatile sound", new BigDecimal("549.99"), new BigDecimal("29.99"), "KEYBOARD", 6, "/img/keyboard.svg"),
-            createEquipment("Martin D-28 Acoustic Guitar", "Premium acoustic guitar with rich tone", new BigDecimal("2799.99"), new BigDecimal("89.99"), "GUITAR", 2, "/img/guitar.svg"),
-            createEquipment("Fender Jazz Bass", "Classic electric bass with versatile sound", new BigDecimal("1199.99"), new BigDecimal("59.99"), "BASS", 4, "/img/guitar.svg"),
-            createEquipment("Audio-Technica AT2020 Condenser Microphone", "Studio condenser microphone for recording", new BigDecimal("149.99"), new BigDecimal("12.99"), "MICROPHONE", 15, "/img/microphone.svg"),
-            createEquipment("Akai MPC Live", "Standalone music production center", new BigDecimal("1199.99"), new BigDecimal("69.99"), "PRODUCTION", 5, "/img/keyboard.svg")
+            createEquipment("Fender Stratocaster", "Professional electric guitar with legendary tone and playability", new BigDecimal("999.99"), "GUITAR", 5, "/img/guitar.svg"),
+            createEquipment("Gibson Les Paul", "Classic electric guitar with rich, warm tone", new BigDecimal("1299.99"), "GUITAR", 3, "/img/guitar.svg"),
+            createEquipment("Yamaha P-125 Digital Piano", "Compact digital piano with 88 weighted keys", new BigDecimal("699.99"), "KEYBOARD", 8, "/img/keyboard.svg"),
+            createEquipment("Pearl Export Drum Set", "Complete 5-piece drum kit with hardware", new BigDecimal("799.99"), "DRUMS", 4, "/img/drums.svg"),
+            createEquipment("Shure SM58 Microphone", "Industry-standard dynamic vocal microphone", new BigDecimal("99.99"), "MICROPHONE", 20, "/img/microphone.svg"),
+            createEquipment("Ibanez RG550", "High-performance electric guitar for fast players", new BigDecimal("899.99"), "GUITAR", 7, "/img/guitar.svg"),
+            createEquipment("Roland TD-17KVX Electronic Drum Kit", "Professional electronic drum kit with mesh heads", new BigDecimal("1599.99"), "DRUMS", 3, "/img/drums.svg"),
+            createEquipment("Korg Minilogue Synthesizer", "Polyphonic analog synthesizer with versatile sound", new BigDecimal("549.99"), "KEYBOARD", 6, "/img/keyboard.svg"),
+            createEquipment("Martin D-28 Acoustic Guitar", "Premium acoustic guitar with rich tone", new BigDecimal("2799.99"), "GUITAR", 2, "/img/guitar.svg"),
+            createEquipment("Fender Jazz Bass", "Classic electric bass with versatile sound", new BigDecimal("1199.99"), "BASS", 4, "/img/guitar.svg"),
+            createEquipment("Audio-Technica AT2020 Condenser Microphone", "Studio condenser microphone for recording", new BigDecimal("149.99"), "MICROPHONE", 15, "/img/microphone.svg"),
+            createEquipment("Akai MPC Live", "Standalone music production center", new BigDecimal("1199.99"), "PRODUCTION", 5, "/img/keyboard.svg")
         );
         
         equipmentRepository.saveAll(equipmentList);
@@ -97,20 +96,19 @@ public class DatabaseInitializer implements CommandLineRunner {
         System.out.println("Sample equipment created successfully.");
     }
     
-    private Equipment createEquipment(String name, String description, BigDecimal priceSale, BigDecimal priceRental, String category, int quantity) {
+    private Equipment createEquipment(String name, String description, BigDecimal priceSale, String category, int quantity) {
         Equipment equipment = new Equipment();
         equipment.setName(name);
         equipment.setDescription(description);
         equipment.setPriceSale(priceSale);
-        equipment.setPriceRental(priceRental);
         equipment.setCategory(category);
         equipment.setQuantityAvailable(quantity);
         equipment.setActive(true);
         return equipment;
     }
     
-    private Equipment createEquipment(String name, String description, BigDecimal priceSale, BigDecimal priceRental, String category, int quantity, String imageUrl) {
-        Equipment equipment = createEquipment(name, description, priceSale, priceRental, category, quantity);
+    private Equipment createEquipment(String name, String description, BigDecimal priceSale, String category, int quantity, String imageUrl) {
+        Equipment equipment = createEquipment(name, description, priceSale, category, quantity);
         equipment.setImageUrl(imageUrl);
         return equipment;
     }
@@ -170,32 +168,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             micItem.setRental(false);
             orderItemRepository.save(micItem);
             
-            // Create a rental order for the user
-            Order rentalOrder = new Order();
-            rentalOrder.setUser(user);
-            rentalOrder.setOrderDate(LocalDateTime.now().minusDays(2));
-            rentalOrder.setStatus("CONFIRMED");
-            rentalOrder.setOrderType("RENTAL");
-            rentalOrder.setRentalStartDate(LocalDateTime.now());
-            rentalOrder.setRentalEndDate(LocalDateTime.now().plusDays(7));
-            
-            Equipment drums = allEquipment.get(3); // Pearl Export Drum Set
-            
-            // Calculate rental for 7 days
-            BigDecimal rentalSubtotal = drums.getPriceRental().multiply(new BigDecimal(7));
-            rentalOrder.setTotalAmount(rentalSubtotal);
-            
-            Order savedRentalOrder = orderRepository.save(rentalOrder);
-            
-            OrderItem drumsItem = new OrderItem();
-            drumsItem.setOrder(savedRentalOrder);
-            drumsItem.setEquipment(drums);
-            drumsItem.setQuantity(1);
-            drumsItem.setPrice(drums.getPriceRental());
-            drumsItem.setSubtotal(rentalSubtotal);
-            drumsItem.setRental(true);
-            drumsItem.setRentalDays(7);
-            orderItemRepository.save(drumsItem);
+            // Rental demo removed
             
             // Create a pending order for the admin (for demonstration)
             Order adminOrder = new Order();

@@ -28,8 +28,7 @@
                                 <th>ID</th>
                                 <th>Image</th>
                                 <th>Name</th>
-                                <th>Sale Price</th>
-                                <th>Rental Price</th>
+                                <th>Prix de vente (Ar)</th>
                                 <th>Available</th>
                                 <th>Actions</th>
                             </tr>
@@ -43,8 +42,7 @@
                                     <span th:unless="${equipment.imageUrl}" class="text-muted">No image</span>
                                 </td>
                                 <td th:text="${equipment.name}">Equipment Name</td>
-                                <td th:text="${'€' + equipment.priceSale}">€100.00</td>
-                                <td th:text="${'€' + equipment.priceRental}">€10.00</td>
+                                <td th:text="${'Ar ' + equipment.priceSale}">Ar 100.00</td>
                                 <td th:text="${equipment.quantityAvailable}">10</td>
                                 <td>
                                     <div class="btn-group" role="group">

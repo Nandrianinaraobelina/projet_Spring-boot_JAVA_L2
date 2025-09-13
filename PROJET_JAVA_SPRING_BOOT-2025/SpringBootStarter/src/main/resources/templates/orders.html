@@ -51,7 +51,7 @@
                                 <ul class="list-unstyled">
                                     <li><strong>Type de Commande:</strong> <span th:text="${order.orderType}">VENTE</span></li>
                                     <li><strong>Date de Commande:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">01-01-2023 12:30</span></li>
-                                    <li><strong>Montant Total:</strong> <span th:text="${'€' + order.totalAmount}">€100.00</span></li>
+                                    <li><strong>Montant Total:</strong> <span th:text="${'Ar ' + order.totalAmount}">Ar 100.00</span></li>
                                     <li th:if="${order.isRental()}">
                                         <strong>Période de Location:</strong> 
                                         <span th:text="${#temporals.format(order.rentalStartDate, 'dd-MM-yyyy')}">01-01-2023</span> 
@@ -67,16 +67,7 @@
                                 <button th:data-order-id="${order.id}" onclick="printOrder(this.getAttribute('data-order-id'))" class="btn btn-outline-dark me-2">
                                     <i data-feather="printer"></i> Imprimer
                                 </button>
-                                <form th:if="${order.orderType == 'RENTAL' && order.status != 'CANCELLED'}" 
-                                      th:action="@{/orders/{id}/cancel(id=${order.id})}" 
-                                      method="post" 
-                                      style="display: inline;">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                    <button type="submit" class="btn btn-outline-danger" 
-                                            onclick="return confirm('Êtes-vous sûr de vouloir annuler cette location ?')">
-                                        <i data-feather="x"></i> Annuler
-                                    </button>
-                                </form>
+                                
                             </div>
                         </div>
                         
@@ -101,8 +92,8 @@
                                             </div>
                                         </td>
                                         <td th:text="${item.quantity}">1</td>
-                                        <td th:text="${'€' + item.price}">€100.00</td>
-                                        <td th:text="${'€' + item.subtotal}">€100.00</td>
+                                        <td th:text="${'Ar ' + item.price}">Ar 100.00</td>
+                                        <td th:text="${'Ar ' + item.subtotal}">Ar 100.00</td>
                                     </tr>
                                 </tbody>
                             </table>

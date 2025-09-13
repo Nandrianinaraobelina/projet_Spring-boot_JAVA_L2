@@ -53,32 +53,14 @@ public class UserController {
             return "register";
         }
 
-        // Encode password and set default role
+        // Encode password and set default role matching DB enum
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("USER");
+        user.setRole("client");
 
         userService.save(user);
-        
-        // Auto-login user and redirect to home page directly
-        try {
-            org.springframework.security.core.userdetails.UserDetails userDetails = 
-                org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getEmail())
-                    .password(user.getPassword()) // Already encoded
-                    .roles(user.getRole())
-                    .build();
-            
-            org.springframework.security.authentication.UsernamePasswordAuthenticationToken authToken =
-                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            
-            org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(authToken);
-        } catch (Exception e) {
-            // If auto-login fails, redirect to login page
-            return "redirect:/login?registered";
-        }
-        
-        return "redirect:/";
+
+        // Always redirect to login after successful registration
+        return "redirect:/login?registered";
     }
 
     /**

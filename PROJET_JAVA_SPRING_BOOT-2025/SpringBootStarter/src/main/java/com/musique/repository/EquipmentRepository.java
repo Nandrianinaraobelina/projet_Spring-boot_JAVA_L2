@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,11 +20,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
      */
     List<Equipment> findByNameContainingIgnoreCase(String name);
 
-    /**
-     * Find equipment available for rental (price_rental > 0)
-     */
-    @Query("SELECT e FROM Equipment e WHERE e.priceRental > 0")
-    List<Equipment> findRentableEquipment();
+    // Rental removed: no rentable query
 
     /**
      * Find equipment with available stock
@@ -47,10 +42,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
      */
     Page<Equipment> findByCategoryAndActiveTrue(String category, Pageable pageable);
     
-    /**
-     * Find equipment with rental price greater than the given amount
-     */
-    Page<Equipment> findByPriceRentalGreaterThanAndActiveTrue(BigDecimal price, Pageable pageable);
+    // Rental removed: no rental price queries
     
     /**
      * Find related equipment in the same category (excluding the current item)

@@ -210,22 +210,22 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * Current currency setting
  */
-let currentCurrency = localStorage.getItem('currency') || 'EUR';
+let currentCurrency = localStorage.getItem('currency') || 'MGA';
 
 /**
  * Currency conversion rates (simplified example)
  */
 const currencyRates = {
-    'EUR': 1,        // Euro (base currency)
-    'MGA': 4800,     // Malagasy Ariary (approximation)
+    'MGA': 1,
+    'EUR': 1/4800,
 };
 
 /**
  * Currency symbols
  */
 const currencySymbols = {
-    'EUR': '€',
     'MGA': 'Ar',
+    'EUR': '€',
 };
 
 /**
@@ -273,10 +273,10 @@ function formatCurrency(amount) {
     const convertedAmount = parseFloat(amount) * currencyRates[currentCurrency];
     
     // Format with correct decimal places (0 for MGA, 2 for others)
-    if (currentCurrency === 'MGA') {
-        return currencySymbols[currentCurrency] + Math.round(convertedAmount).toLocaleString();
-    } else {
+    if (currentCurrency === 'EUR') {
         return currencySymbols[currentCurrency] + convertedAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    } else {
+        return currencySymbols[currentCurrency] + Math.round(convertedAmount).toLocaleString();
     }
 }
 
@@ -287,20 +287,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const currencySwitcher = document.createElement('div');
         currencySwitcher.className = 'currency-switcher position-fixed bottom-0 end-0 mb-4 me-4 bg-white shadow rounded p-2';
         
-        const euroBtn = document.createElement('button');
-        euroBtn.className = 'btn btn-sm me-1 ' + (currentCurrency === 'EUR' ? 'btn-primary' : 'btn-outline-primary');
-        euroBtn.textContent = '€ EUR';
-        euroBtn.dataset.currency = 'EUR';
-        euroBtn.addEventListener('click', () => switchCurrency('EUR'));
-        
         const ariaryBtn = document.createElement('button');
-        ariaryBtn.className = 'btn btn-sm ' + (currentCurrency === 'MGA' ? 'btn-primary' : 'btn-outline-primary');
+        ariaryBtn.className = 'btn btn-sm me-1 ' + (currentCurrency === 'MGA' ? 'btn-primary' : 'btn-outline-primary');
         ariaryBtn.textContent = 'Ar MGA';
         ariaryBtn.dataset.currency = 'MGA';
         ariaryBtn.addEventListener('click', () => switchCurrency('MGA'));
         
-        currencySwitcher.appendChild(euroBtn);
         currencySwitcher.appendChild(ariaryBtn);
+        const euroBtn = document.createElement('button');
+        euroBtn.className = 'btn btn-sm ' + (currentCurrency === 'EUR' ? 'btn-primary' : 'btn-outline-primary');
+        euroBtn.textContent = '€ EUR';
+        euroBtn.dataset.currency = 'EUR';
+        euroBtn.addEventListener('click', () => switchCurrency('EUR'));
+        currencySwitcher.appendChild(euroBtn);
         
         document.body.appendChild(currencySwitcher);
     }
@@ -308,8 +307,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add data-price attributes to all price elements
     document.querySelectorAll('td, span, div').forEach(el => {
         const text = el.textContent.trim();
-        if (text.startsWith('€')) {
-            const priceValue = parseFloat(text.replace('€', '').replace(',', ''));
+        if (text.startsWith('Ar')) {
+            const priceValue = parseFloat(text.replace('Ar', '').replaceAll(' ', '').replace(',', ''));
             if (!isNaN(priceValue)) {
                 el.dataset.price = priceValue;
                 el.textContent = formatCurrency(priceValue);

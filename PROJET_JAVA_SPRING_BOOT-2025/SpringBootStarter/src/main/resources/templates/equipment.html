@@ -21,51 +21,9 @@
         </div>
         
         <div class="row">
-            <!-- Filtres -->
-            <div class="col-md-3">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Filtres</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <h6>Catégorie</h6>
-                            <select class="form-select" id="categoryFilter">
-                                <option value="">Toutes les catégories</option>
-                                <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}">Catégorie</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <h6>Disponibilité</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="availForSale" checked>
-                                <label class="form-check-label" for="availForSale">Disponible à la vente</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="availForRent" checked>
-                                <label class="form-check-label" for="availForRent">Disponible à la location</label>
-                            </div>
-                        </div>
-                        
-                        <hr>
-                        
-                        <div class="mb-3">
-                            <h6>Fourchette de Prix</h6>
-                            <div class="d-flex align-items-center">
-                                <input type="number" class="form-control form-control-sm me-2" placeholder="Min" min="0">
-                                <span>-</span>
-                                <input type="number" class="form-control form-control-sm ms-2" placeholder="Max" min="0">
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary w-100 mt-3">Appliquer les Filtres</button>
-                    </div>
-                </div>
-            </div>
             
             <!-- Liste des équipements -->
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     <div class="col" th:each="equip : ${equipment}">
                         <div class="card h-100">
@@ -82,13 +40,10 @@
                                 
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Prix vente :</span>
-                                    <span class="fw-bold" th:text="${'€' + equip.priceSale}">€100.00</span>
+                                    <span class="fw-bold" th:text="${'Ar ' + equip.priceSale}">Ar 100.00</span>
                                 </div>
                                 
-                                <div class="d-flex justify-content-between mb-3" th:if="${equip.priceRental > 0}">
-                                    <span>Prix location/jour :</span>
-                                    <span class="fw-bold" th:text="${'€' + equip.priceRental}">€10.00</span>
-                                </div>
+                                
                                 
                                 <div class="d-flex justify-content-between">
                                     <form th:action="@{/cart/add}" method="post">
@@ -99,11 +54,7 @@
                                         </button>
                                     </form>
                                     
-                                    <a th:if="${equip.priceRental > 0}" 
-                                       th:href="@{/equipment/{id}/reserve(id=${equip.id})}" 
-                                       class="btn btn-outline-success">
-                                        <i data-feather="calendar"></i> Louer
-                                    </a>
+                                    
                                 </div>
                             </div>
                             
@@ -122,7 +73,7 @@
                 </div>
                 
                 <div th:if="${#lists.isEmpty(equipment)}" class="alert alert-info mt-3">
-                    Aucun équipement trouvé. Veuillez essayer des critères de recherche différents.
+                    Aucun équipement trouvé.
                 </div>
             </div>
         </div>

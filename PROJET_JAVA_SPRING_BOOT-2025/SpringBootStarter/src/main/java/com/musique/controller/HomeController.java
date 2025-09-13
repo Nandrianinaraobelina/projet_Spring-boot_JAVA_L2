@@ -33,12 +33,7 @@ public class HomeController {
             ).getContent();
             model.addAttribute("featuredForSale", featuredForSale);
             
-            // Get featured equipment for rental (most expensive rental items)
-            List<Equipment> featuredForRental = equipmentRepository.findByPriceRentalGreaterThanAndActiveTrue(
-                    java.math.BigDecimal.ZERO,
-                    PageRequest.of(0, 4, Sort.by("priceRental").descending())
-            ).getContent();
-            model.addAttribute("featuredForRental", featuredForRental);
+            // Rental removed: no featured rental section
             
             // Get categories for the category section
             List<String> categories = equipmentRepository.findDistinctCategories();
@@ -46,7 +41,7 @@ public class HomeController {
         } catch (Exception e) {
             // En cas d'erreur, on initialise avec des listes vides
             model.addAttribute("featuredForSale", new ArrayList<Equipment>());
-            model.addAttribute("featuredForRental", new ArrayList<Equipment>());
+            // Rental removed: keep empty list out
             model.addAttribute("categories", new ArrayList<String>());
         }
         

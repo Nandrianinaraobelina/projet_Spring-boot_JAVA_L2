@@ -130,35 +130,33 @@
                         <div th:each="item : ${cartItems}" class="d-flex justify-content-between mb-2">
                             <div>
                                 <span th:text="${item.equipment.name}">Article</span>
-                                <small class="text-muted d-block" th:if="${item.rental}">
-                                    Location: <span th:if="${item.rentalDays != null}" th:text="${item.rentalDays} + ' jours'">5 jours</span>
-                                </small>
+                                
                             </div>
-                            <span th:text="${'€' + item.subtotal}">€100.00</span>
+                            <span th:text="${'Ar ' + item.subtotal}">Ar 100.00</span>
                         </div>
                         
                         <hr>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>Sous-total:</span>
-                            <span th:text="${'€' + total}">€100.00</span>
+                            <span th:text="${'Ar ' + total}">Ar 100.00</span>
                         </div>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>Livraison:</span>
-                            <span>€0.00</span>
+                            <span>Ar 0.00</span>
                         </div>
                         
                         <div class="d-flex justify-content-between mb-2">
                             <span>TVA:</span>
-                            <span>€0.00</span>
+                            <span>Ar 0.00</span>
                         </div>
                         
                         <hr>
                         
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold">Total:</span>
-                            <span class="fw-bold" th:text="${'€' + total}">€100.00</span>
+                            <span class="fw-bold" th:text="${'Ar ' + total}">Ar 100.00</span>
                         </div>
                     </div>
                 </div>

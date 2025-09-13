@@ -44,16 +44,13 @@
                                                      alt="Image de l'équipement" style="max-width: 50px; max-height: 50px;" class="me-2">
                                                 <div>
                                                     <p class="mb-0" th:text="${item.equipment.name}">Nom de l'équipement</p>
-                                                    <small th:if="${item.rentalStartDate != null}" class="text-muted">
-                                                        Location: <span th:text="${#temporals.format(item.rentalStartDate, 'dd-MM-yyyy')}">01-01-2023</span> 
-                                                        au <span th:text="${#temporals.format(item.rentalEndDate, 'dd-MM-yyyy')}">05-01-2023</span>
-                                                    </small>
+                                                    
                                                 </div>
                                             </div>
                                         </td>
-                                        <td th:text="${'€' + item.price}">€100.00</td>
+                                        <td th:text="${'Ar ' + item.price}">Ar 100.00</td>
                                         <td th:text="${item.quantity}">1</td>
-                                        <td th:text="${'€' + item.subtotal}">€100.00</td>
+                                        <td th:text="${'Ar ' + item.subtotal}">Ar 100.00</td>
                                         <td>
                                             <a th:href="@{/cart/remove/{id}(id=${item.equipment.id})}" class="btn btn-sm btn-outline-danger">
                                                 <i data-feather="trash-2"></i> Supprimer
@@ -81,12 +78,12 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <span>Sous-total:</span>
-                            <span th:text="${'€' + total}">€100.00</span>
+                            <span th:text="${'Ar ' + total}">Ar 100.00</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
                             <span class="fw-bold">Total:</span>
-                            <span class="fw-bold" th:text="${'€' + total}">€100.00</span>
+                            <span class="fw-bold" th:text="${'Ar ' + total}">Ar 100.00</span>
                         </div>
                         <a th:href="@{/checkout}" class="btn btn-primary w-100">
                             <i data-feather="shopping-cart"></i> Procéder au Paiement

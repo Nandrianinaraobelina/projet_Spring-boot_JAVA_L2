@@ -76,13 +76,28 @@ public class UserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         
+        // Map DB role values like 'admin','client','vendeur' to Spring Security authorities 'ROLE_ADMIN', ...
+        String normalizedRole = (user.getRole() == null ? "CLIENT" : user.getRole().trim().toUpperCase());
+        // Safety: map potential synonyms
+        switch (normalizedRole) {
+            case "ADMIN":
+            case "CLIENT":
+            case "VENDEUR":
+                break;
+            case "USER": // legacy
+                normalizedRole = "CLIENT";
+                break;
+            default:
+                normalizedRole = "CLIENT";
+        }
+
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + normalizedRole))
         );
     }
 }

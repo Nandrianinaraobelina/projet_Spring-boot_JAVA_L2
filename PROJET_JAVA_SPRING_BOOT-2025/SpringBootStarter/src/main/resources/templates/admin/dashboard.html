@@ -62,11 +62,11 @@
                                 <i data-feather="home" class="me-2"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a th:href="@{/admin/equipment}" class="nav-link">
                                 <i data-feather="music" class="me-2"></i> Equipment
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a th:href="@{/admin/users}" class="nav-link">
                                 <i data-feather="users" class="me-2"></i> Users
@@ -155,7 +155,7 @@
                                         <td th:text="${order.id}">123</td>
                                         <td th:text="${order.user.name}">John Doe</td>
                                         <td th:text="${#dates.format(order.orderDate, 'dd-MM-yyyy')}">01-01-2023</td>
-                                        <td th:text="${'€' + order.totalAmount}">€100.00</td>
+                                        <td th:text="${'Ar ' + order.totalAmount}">Ar 100.00</td>
                                         <td>
                                             <span th:class="${order.status == 'PAID' ? 'badge bg-success' : 'badge bg-warning'}" 
                                                   th:text="${order.status}">PAID</span>
@@ -186,7 +186,6 @@
                                         <th>Name</th>
                                         <th>Category</th>
                                         <th>Price (Sale)</th>
-                                        <th>Price (Rental)</th>
                                         <th>Stock</th>
                                         <th>Status</th>
                                     </tr>
@@ -200,8 +199,7 @@
                                         </td>
                                         <td th:text="${equip.name}">Acoustic Guitar</td>
                                         <td th:text="${equip.category}">Guitar</td>
-                                        <td th:text="${'€' + equip.priceSale}">€599.00</td>
-                                        <td th:text="${'€' + equip.priceRental}">€50.00</td>
+                                        <td th:text="${'Ar ' + equip.priceSale}">Ar 599.00</td>
                                         <td th:text="${equip.quantityAvailable}">10</td>
                                         <td>
                                             <span th:class="${equip.active ? 'badge bg-success' : 'badge bg-danger'}" 

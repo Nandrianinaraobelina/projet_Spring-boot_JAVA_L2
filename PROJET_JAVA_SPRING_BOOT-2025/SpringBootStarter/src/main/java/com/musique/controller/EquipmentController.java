@@ -137,9 +137,7 @@ public class EquipmentController {
             model.addAttribute("title", "Équipements récemment ajoutés");
             model.addAttribute("isRecentView", true);
             
-            // Get all unique categories for the filter dropdown
-            List<String> categories = equipmentRepository.findDistinctCategories();
-            model.addAttribute("categories", categories);
+            // Filter UI removed; categories not required here
 
             // Log pour le débogage
             System.out.println(">>> Page RECENT - Nombre d'équipements chargés : " + recentEquipmentPage.getContent().size());
@@ -164,51 +162,7 @@ public class EquipmentController {
         return recentEquipment(model);
     }
     
-    /**
-     * Affiche le formulaire de réservation pour un équipement spécifique
-     * 
-     * @param id L'ID de l'équipement à réserver
-     * @param model Le modèle à enrichir
-     * @return La vue du formulaire de réservation
-     */
-    @GetMapping("/{id}/reserve")
-    public String reserveEquipment(@PathVariable Long id, Model model) {
-        try {
-            Optional<Equipment> equipmentOpt = equipmentRepository.findById(id);
-            
-            if (equipmentOpt.isEmpty() || !equipmentOpt.get().isActive()) {
-                model.addAttribute("errorMessage", "Équipement non disponible");
-                return "redirect:/equipment";
-            }
-            
-            Equipment equipment = equipmentOpt.get();
-            
-            // Vérifier que l'équipement est disponible à la location
-            if (equipment.getPriceRental() == null || equipment.getPriceRental().compareTo(java.math.BigDecimal.ZERO) <= 0) {
-                model.addAttribute("errorMessage", "Cet équipement n'est pas disponible à la location");
-                return "redirect:/equipment";
-            }
-            
-            // Vérifier que l'équipement est en stock
-            if (equipment.getQuantityAvailable() <= 0) {
-                model.addAttribute("errorMessage", "Cet équipement n'est plus en stock");
-                return "redirect:/equipment";
-            }
-            
-            model.addAttribute("equipment", equipment);
-            
-            // Pour le débogage
-            System.out.println(">>> Formulaire de réservation pour équipement #" + id + " (" + equipment.getName() + ")");
-            
-            return "reservation";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Erreur lors du chargement de l'équipement: " + e.getMessage());
-            // Pour le débogage
-            System.out.println(">>> ERREUR: Réservation équipement #" + id + ": " + e.getMessage());
-            e.printStackTrace();
-            return "redirect:/equipment";
-        }
-    }
+    // Rental removed: reservation route deleted
 
     @GetMapping("/{id}/increase-stock")
     public String increaseStock(@PathVariable Long id, @RequestParam(defaultValue = "10") int quantity) {

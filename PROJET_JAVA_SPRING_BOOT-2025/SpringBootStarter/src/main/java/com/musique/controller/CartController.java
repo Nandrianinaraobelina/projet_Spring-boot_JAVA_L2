@@ -11,8 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -62,9 +60,7 @@ public class CartController {
     public String addToCart(
             @RequestParam Long equipmentId,
             @RequestParam(defaultValue = "1") Integer quantity,
-            @RequestParam(required = false) Boolean isRental,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
+            
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         
@@ -90,30 +86,9 @@ public class CartController {
         orderItem.setEquipment(equipment);
         orderItem.setQuantity(quantity);
         
-        // Set rental details if applicable
-        if (isRental != null && isRental) {
-            orderItem.setRental(true);
-            if (startDate != null && endDate != null) {
-                LocalDate start = LocalDate.parse(startDate);
-                LocalDate end = LocalDate.parse(endDate);
-                orderItem.setRentalStartDate(start);
-                orderItem.setRentalEndDate(end);
-                
-                // Calculate rental days (inclusive)
-                long days = ChronoUnit.DAYS.between(start, end) + 1;
-                orderItem.setRentalDays((int) days);
-                
-                // Calculate price based on rental price and days
-                BigDecimal rentalPrice = equipment.getPriceRental()
-                        .multiply(BigDecimal.valueOf(days))
-                        .multiply(BigDecimal.valueOf(quantity));
-                orderItem.setPrice(rentalPrice);
-            }
-        } else {
-            // Regular purchase
-            orderItem.setRental(false);
-            orderItem.setPrice(equipment.getPriceSale().multiply(BigDecimal.valueOf(quantity)));
-        }
+        // Regular purchase only
+        orderItem.setRental(false);
+        orderItem.setPrice(equipment.getPriceSale().multiply(BigDecimal.valueOf(quantity)));
         
         // Mettre à jour la quantité disponible en stock
         equipment.setQuantityAvailable(equipment.getQuantityAvailable() - quantity);

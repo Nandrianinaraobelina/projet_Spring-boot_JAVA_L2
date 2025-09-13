@@ -34,8 +34,9 @@
                                 <td th:text="${user.name}">John Doe</td>
                                 <td th:text="${user.email}">john@example.com</td>
                                 <td>
-                                    <span th:class="${'badge ' + (user.role == 'ADMIN' ? 'bg-danger' : 'bg-primary')}" 
-                                          th:text="${user.role}">USER</span>
+                                    <span th:with="r=${#strings.toUpperCase(user.role)}"
+                                          th:class="${'badge ' + (r == 'ADMIN' ? 'bg-danger' : (r == 'VENDEUR' ? 'bg-warning text-dark' : 'bg-primary'))}"
+                                          th:text="${r}">CLIENT</span>
                                 </td>
                                 <td th:text="${user.orders.size()}">0</td>
                                 <td>
@@ -43,7 +44,7 @@
                                         <button class="btn btn-sm btn-info">
                                             <i data-feather="user"></i> View Details
                                         </button>
-                                        <button class="btn btn-sm btn-danger" th:if="${user.role != 'ADMIN'}">
+                                        <button class="btn btn-sm btn-danger" th:if="${#strings.toUpperCase(user.role) != 'ADMIN'}">
                                             <i data-feather="trash-2"></i> Delete
                                         </button>
                                     </div>

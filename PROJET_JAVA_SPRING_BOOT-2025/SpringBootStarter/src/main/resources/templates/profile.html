@@ -16,15 +16,12 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body text-center">
-                        <img th:src="${user.profileImage != null ? user.profileImage : '/images/default-avatar.png'}" 
-                             class="rounded-circle mb-3" 
-                             style="width: 150px; height: 150px; object-fit: cover;"
-                             alt="Photo de profil">
-                        <h5 class="card-title" th:text="${user.firstName + ' ' + user.lastName}">Nom d'utilisateur</h5>
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3" 
+                             style="width: 150px; height: 150px;">
+                            <i data-feather="user" style="width: 64px; height: 64px;"></i>
+                        </div>
+                        <h5 class="card-title" th:text="${user.name}">Nom d'utilisateur</h5>
                         <p class="text-muted" th:text="${user.email}">email@example.com</p>
-                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                            <i data-feather="lock"></i> Changer le mot de passe
-                        </button>
                     </div>
                 </div>
             </div>
@@ -35,63 +32,21 @@
                         <h4 class="mb-0">Informations personnelles</h4>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="firstName" class="form-label">Prénom</label>
-                                    <input type="text" class="form-control" id="firstName" name="firstName" 
-                                           th:value="${user.firstName}" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="lastName" class="form-label">Nom</label>
-                                    <input type="text" class="form-control" id="lastName" name="lastName" 
-                                           th:value="${user.lastName}" required>
-                                </div>
+                        <form th:action="@{/profile}" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       th:value="${user.name}" required>
                             </div>
-                            
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" 
-                                       th:value="${user.email}" required>
+                                       th:value="${user.email}" readonly>
                             </div>
-                            
                             <div class="mb-3">
-                                <label for="phone" class="form-label">Téléphone</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" 
-                                       th:value="${user.phone}">
+                                <label for="password" class="form-label">Nouveau mot de passe (optionnel)</label>
+                                <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Adresse</label>
-                                <input type="text" class="form-control" id="address" name="address" 
-                                       th:value="${user.address}">
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="city" class="form-label">Ville</label>
-                                    <input type="text" class="form-control" id="city" name="city" 
-                                           th:value="${user.city}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="postalCode" class="form-label">Code postal</label>
-                                    <input type="text" class="form-control" id="postalCode" name="postalCode" 
-                                           th:value="${user.postalCode}">
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="country" class="form-label">Pays</label>
-                                <input type="text" class="form-control" id="country" name="country" 
-                                       th:value="${user.country}">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="profileImage" class="form-label">Photo de profil</label>
-                                <input type="file" class="form-control" id="profileImage" name="profileImage" 
-                                       accept="image/*">
-                            </div>
-                            
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">
                                     <i data-feather="save"></i> Enregistrer les modifications
@@ -104,44 +59,7 @@
         </div>
     </div>
     
-    <!-- Modal de changement de mot de passe -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Changer le mot de passe</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/profile/change-password}" method="post">
-                        <div class="mb-3">
-                            <label for="currentPassword" class="form-label">Mot de passe actuel</label>
-                            <input type="password" class="form-control" id="currentPassword" 
-                                   name="currentPassword" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="newPassword" class="form-label">Nouveau mot de passe</label>
-                            <input type="password" class="form-control" id="newPassword" 
-                                   name="newPassword" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="confirmNewPassword" class="form-label">Confirmer le nouveau mot de passe</label>
-                            <input type="password" class="form-control" id="confirmNewPassword" 
-                                   name="confirmNewPassword" required>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i data-feather="lock"></i> Mettre à jour le mot de passe
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     
     <div th:replace="fragments/footer :: footer"></div>
     
