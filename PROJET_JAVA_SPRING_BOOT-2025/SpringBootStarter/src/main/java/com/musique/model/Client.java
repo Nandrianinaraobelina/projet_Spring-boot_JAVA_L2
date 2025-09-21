@@ -21,8 +21,7 @@ public class Client {
     @Column(name = "nom", nullable = false)
     private String lastName;
 
-    @NotBlank
-    @Column(name = "cin", nullable = false, unique = true)
+    @Column(name = "cin", nullable = true)
     private String cin;
 
     @Column(name = "adresse")

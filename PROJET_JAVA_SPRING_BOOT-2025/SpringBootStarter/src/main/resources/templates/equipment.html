@@ -62,7 +62,7 @@
                                     </button>
                                 </form>
                                 
-                                <!-- Section Location -->
+                                <!-- Section Location (simplified) -->
                                 <div class="rental-section border-top pt-3">
                                     <h6 class="mb-2">Location</h6>
                                     <div class="mb-2" th:if="${equip.rentalPrice != null}">
@@ -73,23 +73,11 @@
                                         <i data-feather="truck" class="me-1"></i>
                                         Frais de livraison: 100 000 Ar
                                     </div>
-                                    <form th:action="@{/rental/add}" method="post" class="rental-form">
-                                        <input type="hidden" name="equipmentId" th:value="${equip.id}">
-                                        <div class="mb-2">
-                                            <label for="startDate" class="form-label small mb-1">Date de début</label>
-                                            <input type="date" class="form-control form-control-sm" id="startDate" name="startDate" required
-                                                   th:min="${T(java.time.LocalDate).now()}">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="endDate" class="form-label small mb-1">Date de fin</label>
-                                            <input type="date" class="form-control form-control-sm" id="endDate" name="endDate" required
-                                                   th:min="${T(java.time.LocalDate).now().plusDays(1)}">
-                                        </div>
-                                        <button type="submit" class="btn btn-outline-primary w-100" th:disabled="${equip.quantityAvailable <= 0}">
-                                            <i data-feather="calendar"></i>
-                                            <span>À louer</span>
-                                        </button>
-                                    </form>
+                                    <a th:href="@{/location}"
+                                       class="btn btn-outline-primary w-100" th:classappend="${equip.quantityAvailable <= 0} ? ' disabled'">
+                                        <i data-feather="calendar"></i>
+                                        <span>À louer</span>
+                                    </a>
                                 </div>
                             </div>
                             

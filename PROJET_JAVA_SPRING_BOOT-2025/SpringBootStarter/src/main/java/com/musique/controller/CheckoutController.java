@@ -105,6 +105,8 @@ public class CheckoutController {
             @RequestParam String city,
             @RequestParam String country,
             @RequestParam String postalCode,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String cin,
             @RequestParam String cardName,
             @RequestParam String cardNumber,
             @RequestParam String expiryDate,
@@ -153,7 +155,9 @@ public class CheckoutController {
 
             order.setTotalAmount(total);
             order.setStatus("PAID");
-            order.setOrderType("SALE");
+            // If any item is a rental, classify the order as RENTAL; otherwise SALE
+            boolean hasRental = cart.stream().anyMatch(OrderItem::isRental);
+            order.setOrderType(hasRental ? "RENTAL" : "SALE");
 
             Order savedOrder = orderRepository.save(order);
 
@@ -161,10 +165,13 @@ public class CheckoutController {
                 item.setOrder(savedOrder);
                 Equipment equipment = item.getEquipment();
                 if (equipment != null) {
-                    int newStock = equipment.getQuantityAvailable() - item.getQuantity();
-                    equipment.setQuantityAvailable(newStock);
-                    equipment.setAvailable(newStock > 0);
-                    equipmentRepository.save(equipment);
+                    // For rentals, stock was already decreased when adding to cart (reservation)
+                    if (!item.isRental()) {
+                        int newStock = equipment.getQuantityAvailable() - item.getQuantity();
+                        equipment.setQuantityAvailable(newStock);
+                        equipment.setAvailable(newStock > 0);
+                        equipmentRepository.save(equipment);
+                    }
                 }
             }
 
@@ -175,11 +182,16 @@ public class CheckoutController {
                 c.setFirstName(parts.length > 1 ? parts[0] : (name != null ? name : user.getName()));
                 c.setLastName(parts.length > 1 ? parts[1] : "");
                 c.setEmail(user.getEmail());
-                c.setCin("N/A");
-                c.setAddress(address);
-                c.setPhone("");
                 return c;
             });
+            // Update renter details
+            client.setAddress(address);
+            if (phone != null) client.setPhone(phone);
+            if (cin != null && !cin.isBlank()) {
+                client.setCin(cin);
+            } else if (client.getCin() == null || client.getCin().isBlank()) {
+                client.setCin("N/A");
+            }
             clientService.incrementPurchaseCount(client);
 
             // Réduction 20% si plus de 3 achats (à appliquer prochain achat)

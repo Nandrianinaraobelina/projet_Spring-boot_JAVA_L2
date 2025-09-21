@@ -77,7 +77,7 @@
                         Ajouter 10 au stock
                     </a>
                     
-                    <!-- Section Location -->
+                    <!-- Section Location (simplified) -->
                     <div class="card mt-2">
                         <div class="card-body">
                             <h5 class="card-title mb-2">Location</h5>
@@ -89,27 +89,13 @@
                                 <i data-feather="truck" class="me-1"></i>
                                 Frais de livraison: 100 000 Ar
                             </div>
-                            <form th:action="@{/rental/add}" method="post">
-                                <input type="hidden" name="equipmentId" th:value="${equipment.id}">
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <label for="startDateDetail" class="form-label small mb-1">Date de début</label>
-                                        <input type="date" id="startDateDetail" name="startDate" class="form-control form-control-sm" required
-                                               th:min="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="endDateDetail" class="form-label small mb-1">Date de fin</label>
-                                        <input type="date" id="endDateDetail" name="endDate" class="form-control form-control-sm" required
-                                               th:min="${#temporals.format(T(java.time.LocalDate).now().plusDays(1), 'yyyy-MM-dd')}">
-                                    </div>
-                                </div>
-                                <div class="mt-3 d-grid">
-                                    <button type="submit" class="btn btn-outline-primary" th:disabled="${equipment.quantityAvailable <= 0}">
-                                        <i data-feather="calendar"></i>
-                                        Louer
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="mt-2 d-grid">
+                                <a th:href="@{/location}"
+                                   class="btn btn-outline-primary" th:classappend="${equipment.quantityAvailable <= 0} ? ' disabled'">
+                                    <i data-feather="calendar"></i>
+                                    Louer
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -186,23 +172,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             feather.replace();
-            
-            // Initialiser les dates dans le modal de location
-            const today = new Date();
-            const startDateInput = document.getElementById('startDate');
-            const endDateInput = document.getElementById('endDate');
-            
-            // Définir la date minimale à aujourd'hui
-            startDateInput.min = today.toISOString().split('T')[0];
-            endDateInput.min = today.toISOString().split('T')[0];
-            
-            // Mettre à jour la date de fin minimale quand la date de début change
-            startDateInput.addEventListener('change', function() {
-                endDateInput.min = this.value;
-                if (endDateInput.value < this.value) {
-                    endDateInput.value = this.value;
-                }
-            });
         });
     </script>
 </body>

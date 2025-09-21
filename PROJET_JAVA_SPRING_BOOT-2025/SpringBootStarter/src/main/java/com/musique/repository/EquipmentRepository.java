@@ -33,6 +33,11 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
     List<Equipment> findByAvailableTrueAndActiveTrue();
     
     /**
+     * Find equipment that can be rented: active, available, in stock, with a rental price defined
+     */
+    List<Equipment> findByAvailableTrueAndActiveTrueAndQuantityAvailableGreaterThanAndRentalPriceIsNotNull(int quantity);
+    
+    /**
      * Find active equipment items
      */
     Page<Equipment> findByActiveTrue(Pageable pageable);

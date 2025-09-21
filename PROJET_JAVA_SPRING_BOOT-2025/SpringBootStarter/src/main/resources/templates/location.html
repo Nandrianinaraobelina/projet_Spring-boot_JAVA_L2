@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location - Musique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4">
+    <h1 class="mb-3">Location</h1>
+    <div class="alert alert-info d-flex align-items-center" role="alert">
+        <i data-feather="truck" class="me-2"></i>
+        <div>
+            Frais de livraison: <strong>100 000 Ar</strong>
+        </div>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/location/search}" method="post" class="row g-3">
+                <div class="col-md-3">
+                    <label for="startDate" class="form-label">Date de début</label>
+                    <input type="date" id="startDate" name="startDate" class="form-control"
+                           th:value="${startDate}"
+                           th:min="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="endDate" class="form-label">Date de fin</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control"
+                           th:value="${endDate}"
+                           th:min="${#temporals.format(T(java.time.LocalDate).now().plusDays(1), 'yyyy-MM-dd')}" required>
+                </div>
+                <div class="col-md-6"></div>
+
+                <div class="col-12 mt-2">
+                    <h5 class="mb-2">Informations du locataire</h5>
+                </div>
+                <div class="col-md-6">
+                    <label for="renterName" class="form-label">Nom complet</label>
+                    <input type="text" class="form-control" id="renterName" name="renterName"
+                           th:value="${renterName}" placeholder="Ex: Rakoto Jean">
+                </div>
+                <div class="col-md-6">
+                    <label for="renterEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="renterEmail" name="renterEmail"
+                           th:value="${renterEmail}" placeholder="email@exemple.com">
+                </div>
+                <div class="col-md-4">
+                    <label for="renterPhone" class="form-label">Téléphone</label>
+                    <input type="tel" class="form-control" id="renterPhone" name="renterPhone"
+                           th:value="${renterPhone}" placeholder="Ex: +261 34 12 345 67">
+                </div>
+                <div class="col-md-4">
+                    <label for="renterCin" class="form-label">CIN</label>
+                    <input type="text" class="form-control" id="renterCin" name="renterCin"
+                           th:value="${renterCin}" placeholder="Ex: 123 456 789 012">
+                </div>
+                <div class="col-md-4">
+                    <label for="renterAddress" class="form-label">Adresse</label>
+                    <input type="text" class="form-control" id="renterAddress" name="renterAddress"
+                           th:value="${renterAddress}" placeholder="Adresse complète">
+                </div>
+
+                <div class="col-12 d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary" type="submit">
+                        <i data-feather="search"></i> Chercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(results)}" class="alert alert-secondary">
+        Sélectionnez des dates puis cliquez sur Chercher pour voir les équipements disponibles à la location.
+    </div>
+
+    <div th:unless="${#lists.isEmpty(results)}" class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="equip : ${results}">
+            <div class="card h-100">
+                <img class="card-img-top"
+                     th:src="${equip.imageUrl != null and !#strings.isEmpty(equip.imageUrl) ? equip.imageUrl : ('https://picsum.photos/seed/' + equip.id + '/600/400')}"
+                     th:alt="${'Image de ' + equip.name}"
+                     loading="lazy" style="height: 180px; object-fit: cover;"
+                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Musique'">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${equip.name}">Nom</h5>
+                    <p class="card-text" th:text="${#strings.abbreviate(equip.description, 100)}">Description</p>
+                    <div class="mb-2">
+                        <span class="fw-bold">Prix de location:</span>
+                        <span th:text="${#numbers.formatDecimal(equip.rentalPrice, 1, 'NONE', 0, 'COMMA') + ' Ar/jour'}">0 Ar/jour</span>
+                    </div>
+                    <div class="small text-muted mb-2">En stock: <span th:text="${equip.quantityAvailable}">0</span></div>
+                    <form th:action="@{/rental/add}" method="post" class="d-grid">
+                        <input type="hidden" name="equipmentId" th:value="${equip.id}">
+                        <input type="hidden" name="startDate" th:value="${#temporals.format(startDate, 'yyyy-MM-dd')}">
+                        <input type="hidden" name="endDate" th:value="${#temporals.format(endDate, 'yyyy-MM-dd')}">
+                        <button type="submit" class="btn btn-outline-primary" th:disabled="${equip.quantityAvailable <= 0}">
+                            <i data-feather="calendar"></i> Louer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        feather.replace();
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        startDate.addEventListener('change', function() {
+            endDate.min = this.value;
+            if (endDate.value < this.value) {
+                endDate.value = this.value;
+            }
+        });
+    });
+</script>
+</body>
+</html>
