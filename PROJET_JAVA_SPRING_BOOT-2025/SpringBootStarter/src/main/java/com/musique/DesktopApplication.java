@@ -150,15 +150,15 @@ public class DesktopApplication extends JFrame {
     private void startSpringBoot() {
         new Thread(() -> {
             try {
-                logMessage("🚀 Démarrage du serveur Spring Boot...");
-                logMessage("📁 Répertoire de travail: " + System.getProperty("user.dir"));
-                logMessage("☕ Version Java: " + System.getProperty("java.version"));
+                logMessage(" Démarrage du serveur Spring Boot...");
+                logMessage(" Répertoire de travail: " + System.getProperty("user.dir"));
+                logMessage(" Version Java: " + System.getProperty("java.version"));
                 
                 springContext = SpringApplication.run(MusiqueApplication.class);
                 serverRunning = true;
                 
                 SwingUtilities.invokeLater(() -> {
-                    statusLabel.setText("✅ Serveur démarré - Application prête à utiliser");
+                    statusLabel.setText(" Serveur démarré - Application prête à utiliser");
                     statusLabel.setForeground(Color.GREEN);
                     openBrowserButton.setEnabled(true);
                     stopServerButton.setEnabled(true);
@@ -167,19 +167,19 @@ public class DesktopApplication extends JFrame {
                     progressBar.setValue(100);
                     progressBar.setString("Serveur actif");
                     
-                    logMessage("✅ Serveur Spring Boot démarré avec succès!");
-                    logMessage("🌐 L'application est accessible sur: http://localhost:8080");
-                    logMessage("📱 Interface web disponible dans votre navigateur");
+                    logMessage(" Serveur Spring Boot démarré avec succès!");
+                    logMessage(" L'application est accessible sur: http://localhost:8080");
+                    logMessage(" Interface web disponible dans votre navigateur");
                 });
                 
             } catch (Exception e) {
                 SwingUtilities.invokeLater(() -> {
-                    statusLabel.setText("❌ Erreur lors du démarrage du serveur");
+                    statusLabel.setText(" Erreur lors du démarrage du serveur");
                     statusLabel.setForeground(Color.RED);
                     progressBar.setIndeterminate(false);
                     progressBar.setValue(0);
                     progressBar.setString("Erreur");
-                    logMessage("❌ Erreur: " + e.getMessage());
+                    logMessage(" Erreur: " + e.getMessage());
                     e.printStackTrace();
                 });
             }
@@ -191,22 +191,22 @@ public class DesktopApplication extends JFrame {
             Desktop desktop = Desktop.getDesktop();
             if (desktop.isSupported(Desktop.Action.BROWSE)) {
                 desktop.browse(new URI("http://localhost:8080"));
-                logMessage("🌐 Ouverture de l'application dans le navigateur...");
-                logMessage("📱 URL: http://localhost:8080");
+                logMessage(" Ouverture de l'application dans le navigateur...");
+                logMessage(" URL: http://localhost:8080");
             } else {
                 JOptionPane.showMessageDialog(this, 
                     "Impossible d'ouvrir le navigateur automatiquement.\n" +
                     "Veuillez ouvrir manuellement: http://localhost:8080", 
                     "Information", 
                     JOptionPane.INFORMATION_MESSAGE);
-                logMessage("⚠️ Ouverture manuelle requise: http://localhost:8080");
+                logMessage(" Ouverture manuelle requise: http://localhost:8080");
             }
         } catch (IOException | URISyntaxException e) {
             JOptionPane.showMessageDialog(this, 
                 "Erreur lors de l'ouverture du navigateur: " + e.getMessage(), 
                 "Erreur", 
                 JOptionPane.ERROR_MESSAGE);
-            logMessage("❌ Erreur lors de l'ouverture: " + e.getMessage());
+            logMessage(" Erreur lors de l'ouverture: " + e.getMessage());
         }
     }
     
@@ -230,7 +230,7 @@ public class DesktopApplication extends JFrame {
                         logMessage("⏹️ Serveur Spring Boot arrêté.");
                     });
                 } catch (Exception e) {
-                    logMessage("❌ Erreur lors de l'arrêt: " + e.getMessage());
+                    logMessage(" Erreur lors de l'arrêt: " + e.getMessage());
                 }
             }).start();
         }
@@ -244,7 +244,7 @@ public class DesktopApplication extends JFrame {
                 try {
                     Thread.sleep(2000);
                     SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("🔄 Redémarrage du serveur...");
+                        statusLabel.setText(" Redémarrage du serveur...");
                         statusLabel.setForeground(Color.ORANGE);
                         progressBar.setIndeterminate(true);
                         progressBar.setString("Redémarrage...");
