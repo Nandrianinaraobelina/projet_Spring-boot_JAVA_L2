@@ -12,7 +12,9 @@
         .product-card:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
         .image-wrapper { position: relative; }
         .stock-badge { position: absolute; top: .5rem; left: .5rem; }
-        .price { font-size: 1.1rem; font-weight: 700; color: #343a40; }
+        .price { font-size: 1rem; font-weight: 600; color: #343a40; }
+        .rental-section { margin-top: 1rem; }
+        .rental-form { background-color: #f8f9fa; padding: 0.75rem; border-radius: 0.375rem; }
     </style>
 </head>
 <body>
@@ -48,15 +50,47 @@
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${equip.name}">Nom de l'Équipement</h5>
                                 <p class="card-text" th:text="${#strings.abbreviate(equip.description, 100)}">Description</p>
-                                <div class="price mb-3" th:text="${#numbers.formatDecimal(equip.priceSale, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</div>
-                                <form th:action="@{/cart/add}" method="post">
+                                <div class="price mb-2" th:text="${'Prix de vente: ' + #numbers.formatDecimal(equip.priceSale, 1, 'NONE', 0, 'COMMA') + 'Ar'}">Prix de vente: 0Ar</div>
+                                
+                                <!-- Formulaire d'achat -->
+                                <form th:action="@{/cart/add}" method="post" class="mb-3">
                                     <input type="hidden" name="equipmentId" th:value="${equip.id}">
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-primary w-100" th:disabled="${equip.quantityAvailable <= 0}">
                                         <i data-feather="shopping-cart"></i>
-                                        <span th:text="${equip.quantityAvailable > 0 ? 'Ajouter au panier' : 'Indisponible'}">Ajouter au panier</span>
+                                        <span th:text="${equip.quantityAvailable > 0 ? 'Acheter' : 'Indisponible'}">Acheter</span>
                                     </button>
                                 </form>
+                                
+                                <!-- Section Location -->
+                                <div class="rental-section border-top pt-3">
+                                    <h6 class="mb-2">Location</h6>
+                                    <div class="mb-2" th:if="${equip.rentalPrice != null}">
+                                        <span class="fw-bold">Prix de location:</span>
+                                        <span th:text="${#numbers.formatDecimal(equip.rentalPrice, 1, 'NONE', 0, 'COMMA') + 'Ar/jour'}"></span>
+                                    </div>
+                                    <div class="mb-2 text-danger small">
+                                        <i data-feather="truck" class="me-1"></i>
+                                        Frais de livraison: 100 000 Ar
+                                    </div>
+                                    <form th:action="@{/rental/add}" method="post" class="rental-form">
+                                        <input type="hidden" name="equipmentId" th:value="${equip.id}">
+                                        <div class="mb-2">
+                                            <label for="startDate" class="form-label small mb-1">Date de début</label>
+                                            <input type="date" class="form-control form-control-sm" id="startDate" name="startDate" required
+                                                   th:min="${T(java.time.LocalDate).now()}">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="endDate" class="form-label small mb-1">Date de fin</label>
+                                            <input type="date" class="form-control form-control-sm" id="endDate" name="endDate" required
+                                                   th:min="${T(java.time.LocalDate).now().plusDays(1)}">
+                                        </div>
+                                        <button type="submit" class="btn btn-outline-primary w-100" th:disabled="${equip.quantityAvailable <= 0}">
+                                            <i data-feather="calendar"></i>
+                                            <span>À louer</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                             
                             <div class="card-footer d-flex align-items-center justify-content-between">
@@ -64,7 +98,7 @@
                                     <span th:if="${equip.quantityAvailable > 0}">En stock: <span th:text="${equip.quantityAvailable}">10</span></span>
                                     <span th:unless="${equip.quantityAvailable > 0}" class="text-danger">Rupture de stock</span>
                                 </div>
-                                <a sec:authorize="hasRole('ADMIN')"
+                                <a 
                                    th:if="${equip.quantityAvailable <= 0}"
                                    th:href="@{/equipment/{id}/increase-stock(id=${equip.id},quantity=10)}"
                                    class="btn btn-sm btn-outline-primary">Ajouter 10</a>

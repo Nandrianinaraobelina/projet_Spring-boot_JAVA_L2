@@ -40,10 +40,10 @@ public class OrderItem {
     @Column(name = "rental_days")
     private Integer rentalDays;
 
-    @Transient // Not persisted to database
+    @Column(name = "rental_start_date")
     private LocalDate rentalStartDate;
 
-    @Transient // Not persisted to database
+    @Column(name = "rental_end_date")
     private LocalDate rentalEndDate;
     
     @Transient // Not persisted to database

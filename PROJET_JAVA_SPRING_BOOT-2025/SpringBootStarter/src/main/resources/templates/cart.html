@@ -58,12 +58,25 @@
                                                      style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
                                                 <div>
                                                     <p class="mb-0" th:text="${item.equipment.name}">Nom de l'équipement</p>
-                                                    
+                                                    <div th:if="${item.rental}" class="small text-muted">
+                                                        <span class="badge bg-info text-dark me-1">Location</span>
+                                                        <span>Du </span>
+                                                        <span th:text="${#temporals.format(item.rentalStartDate, 'dd/MM/yyyy')}">01/01/2025</span>
+                                                        <span> au </span>
+                                                        <span th:text="${#temporals.format(item.rentalEndDate, 'dd/MM/yyyy')}">02/01/2025</span>
+                                                        <div>Inclut livraison: 100 000 Ar</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="price" th:text="${#numbers.formatDecimal(item.equipment.priceSale, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</td>
-                                        <td th:text="${item.quantity}">1</td>
+                                        <td class="price">
+                                            <span th:if="${item.rental}" th:text="${#numbers.formatDecimal(item.price, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</span>
+                                            <span th:unless="${item.rental}" th:text="${#numbers.formatDecimal(item.equipment.priceSale, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</span>
+                                        </td>
+                                        <td>
+                                            <span th:if="${item.rental}">1</span>
+                                            <span th:unless="${item.rental}" th:text="${item.quantity}">1</span>
+                                        </td>
                                         <td class="price" th:text="${#numbers.formatDecimal(item.price, 1, 'NONE', 0, 'COMMA') + 'Ar'}">0Ar</td>
                                         <td>
                                             <a th:href="@{/cart/remove/{id}(id=${item.equipment.id})}" class="btn btn-sm btn-outline-danger">

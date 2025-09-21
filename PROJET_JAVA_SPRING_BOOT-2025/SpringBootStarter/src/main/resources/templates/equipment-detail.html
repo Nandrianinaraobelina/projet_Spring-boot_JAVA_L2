@@ -77,6 +77,41 @@
                         Ajouter 10 au stock
                     </a>
                     
+                    <!-- Section Location -->
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Location</h5>
+                            <div class="mb-2" th:if="${equipment.rentalPrice != null}">
+                                <span class="fw-bold">Prix de location:</span>
+                                <span th:text="${#numbers.formatDecimal(equipment.rentalPrice, 1, 'NONE', 0, 'COMMA') + ' Ar/jour'}">0 Ar/jour</span>
+                            </div>
+                            <div class="mb-2 text-danger small">
+                                <i data-feather="truck" class="me-1"></i>
+                                Frais de livraison: 100 000 Ar
+                            </div>
+                            <form th:action="@{/rental/add}" method="post">
+                                <input type="hidden" name="equipmentId" th:value="${equipment.id}">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label for="startDateDetail" class="form-label small mb-1">Date de début</label>
+                                        <input type="date" id="startDateDetail" name="startDate" class="form-control form-control-sm" required
+                                               th:min="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="endDateDetail" class="form-label small mb-1">Date de fin</label>
+                                        <input type="date" id="endDateDetail" name="endDate" class="form-control form-control-sm" required
+                                               th:min="${#temporals.format(T(java.time.LocalDate).now().plusDays(1), 'yyyy-MM-dd')}">
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-grid">
+                                    <button type="submit" class="btn btn-outline-primary" th:disabled="${equipment.quantityAvailable <= 0}">
+                                        <i data-feather="calendar"></i>
+                                        Louer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -32,7 +32,9 @@ public class Equipment {
     @Column(name = "price_sale", nullable = false)
     private BigDecimal priceSale;
 
-    // Rental removed for client-facing app (no rental price)
+    // Optional rental price per day
+    @Column(name = "rental_price")
+    private BigDecimal rentalPrice;
 
     @NotNull(message = "Quantity is required")
     @Min(value = 0, message = "Quantity must be non-negative")
@@ -84,7 +86,13 @@ public class Equipment {
         this.priceSale = priceSale;
     }
 
-    // Rental removed: no getter/setter
+    public BigDecimal getRentalPrice() {
+        return rentalPrice;
+    }
+
+    public void setRentalPrice(BigDecimal rentalPrice) {
+        this.rentalPrice = rentalPrice;
+    }
 
     public Integer getQuantityAvailable() {
         return quantityAvailable;
@@ -126,7 +134,7 @@ public class Equipment {
         this.available = available;
     }
 
-    // Rental removed: no rentable status
+    // rental flags removed
 
     @Override
     public String toString() {
