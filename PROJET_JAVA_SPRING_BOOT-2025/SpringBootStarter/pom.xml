@@ -79,6 +79,36 @@
                                 <groupId>org.springframework.boot</groupId>
                                 <artifactId>spring-boot-maven-plugin</artifactId>
                         </plugin>
+                        <!-- Maven Shade Plugin pour créer un JAR exécutable -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-shade-plugin</artifactId>
+                                <version>3.4.1</version>
+                                <executions>
+                                        <execution>
+                                                <phase>package</phase>
+                                                <goals>
+                                                        <goal>shade</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <transformers>
+                                                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                                                        <mainClass>com.musique.DesktopApplication</mainClass>
+                                                                </transformer>
+                                                        </transformers>
+                                                </configuration>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                        <!-- Plugin pour exécuter l'application -->
+                        <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>exec-maven-plugin</artifactId>
+                                <version>3.1.0</version>
+                                <configuration>
+                                        <mainClass>com.musique.DesktopApplication</mainClass>
+                                </configuration>
+                        </plugin>
                 </plugins>
         </build>
 </project>
